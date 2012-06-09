@@ -14,10 +14,11 @@ namespace libAniDB.NET
 		/// </summary>
 		event AniDBUnTaggedResponseCallback ResponseRecieved;
 
-		/// <summary>
-		/// True if encryption is enabled
-		/// </summary>
-		bool EncryptionEnabled { get; }
+		///// <summary>
+		///// True if encryption is enabled
+		///// </summary>
+		//bool EncryptionEnabled { get; }
+
 		/// <summary>
 		/// True if logged in
 		/// </summary>
@@ -53,7 +54,8 @@ namespace libAniDB.NET
 		///   {str image server name}</description></item>
 		/// </list>
 		/// </remarks>
-		void Auth(string user, string pass, AniDBTaggedResponseCallback callback = null, bool nat = false, bool comp = false, int mtu = 0, bool imgServer = false);
+		void Auth(string user, string pass, AniDBTaggedResponseCallback callback = null, bool nat = false, bool comp = false,
+		          int mtu = 0, bool imgServer = false);
 
 		/// <summary>
 		/// Logs out, must be logged in
@@ -81,6 +83,7 @@ namespace libAniDB.NET
 		/// <param name="name"></param>
 		/// <param name="callback"></param>
 		void ChangeEncoding(string name, AniDBTaggedResponseCallback callback = null);
+
 		void Uptime(AniDBTaggedResponseCallback callback = null);
 		void Version(AniDBTaggedResponseCallback callback = null);
 		void Anime(int aID, string aMask = "", AniDBTaggedResponseCallback callback = null);
@@ -97,7 +100,7 @@ namespace libAniDB.NET
 		void File(long size, string ed2K, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
 		void File(string aName, string gName, int epNo, string fMask, string aMask,
-		                          AniDBTaggedResponseCallback callback = null);
+		          AniDBTaggedResponseCallback callback = null);
 
 		void File(string aName, int gID, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
@@ -111,9 +114,11 @@ namespace libAniDB.NET
 	}
 
 	public delegate void AniDBTaggedResponseCallback(AniDBResponse response, AniDBRequest request);
+
 	public delegate void AniDBUnTaggedResponseCallback(AniDBResponse response);
 
-	public enum AniDBReturnCode : short {
+	public enum AniDBReturnCode : short
+	{
 		// ReSharper disable InconsistentNaming
 		LOGIN_ACCEPTED = 200, //a
 		LOGIN_ACCEPTED_NEW_VER = 201, //a

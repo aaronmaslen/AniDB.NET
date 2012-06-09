@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using libAniDB.NET;
 
-namespace libAniDB.NET {
+namespace libAniDB.NET
+{
 	/// <summary>
 	/// Implementation of the IAniDB interface
 	/// </summary>
@@ -25,7 +18,7 @@ namespace libAniDB.NET {
 
 		public const int ProtocolVersion = 3;
 
-		public bool EncryptionEnabled { get; private set; }
+		//public bool EncryptionEnabled { get; private set; }
 		//private byte[] _encryptionKey;
 		public string ApiPass;
 
@@ -51,7 +44,8 @@ namespace libAniDB.NET {
 		public readonly string ClientName;
 		public readonly int ClientVer;
 
-		public AniDB(int localPort, string clientName = "libanidbdotnet", int clientVer = 1, Encoding encoding = null, string remoteHostName = "api.anidb.net", int remotePort = 9000, int timeout = 20000)
+		public AniDB(int localPort, string clientName = "libanidbdotnet", int clientVer = 1, Encoding encoding = null,
+		             string remoteHostName = "api.anidb.net", int remotePort = 9000, int timeout = 20000)
 		{
 			ClientName = clientName;
 			ClientVer = clientVer;
@@ -59,7 +53,7 @@ namespace libAniDB.NET {
 			_encoding = encoding ?? Encoding.ASCII;
 
 			_sendBucket = new TokenBucket<AniDBRequest>(MinSendDelay, AvgSendDelay,
-												  BurstLength / (AvgSendDelay - MinSendDelay), true, null);
+			                                            BurstLength / (AvgSendDelay - MinSendDelay), true, null);
 		}
 
 		private void SendCommand(AniDBRequest request)

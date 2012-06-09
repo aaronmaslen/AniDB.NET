@@ -1,19 +1,24 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading;
 
-namespace libAniDB.NET {
-	class TokenBucket<T> {
+namespace libAniDB.NET
+{
+	internal class TokenBucket<T>
+	{
 		private uint _outDelay;
+
 		public uint OutDelay
 		{
 			get { return _outDelay; }
-			set {
+			set
+			{
 				_outDelay = value;
 				_outTimer.Change(value, value);
 			}
 		}
 
 		private uint _tokenAddDelay;
+
 		public uint TokenAddDelay
 		{
 			get { return _tokenAddDelay; }
@@ -35,7 +40,8 @@ namespace libAniDB.NET {
 
 		public delegate void TokenBucketCallBack(T output);
 
-		public TokenBucket(uint outDelay, uint tokenAddDelay, uint tokenCapacity, bool startFilled, TokenBucketCallBack outputCallBack)
+		public TokenBucket(uint outDelay, uint tokenAddDelay, uint tokenCapacity, bool startFilled,
+		                   TokenBucketCallBack outputCallBack)
 		{
 			_outputQueue = new ConcurrentQueue<T>();
 
@@ -54,17 +60,16 @@ namespace libAniDB.NET {
 		private void Output(object state)
 		{
 			T outputObject;
-			
+
 			do
 			{
 				if (_outputQueue.IsEmpty)
 					return;
-
 			} while (!_outputQueue.TryDequeue(out outputObject)); //This is probably VERY bad... ohwell, I'll fix later
 
 			_tokens--;
 
-			((TokenBucketCallBack) state)(outputObject);
+			((TokenBucketCallBack)state)(outputObject);
 		}
 
 		private void TokenAdd(object state)

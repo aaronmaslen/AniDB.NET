@@ -1,36 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpVitamins;
 
 namespace libAniDB.NET
 {
-	public class AniDBRequest {
-		public AniDBRequest(string command, AniDBTaggedResponseCallback callback = null, params KeyValuePair<string, string>[] args) : this(command, callback)
-		{
-			ParValues = args.ToDictionary(a => a.Key, a => a.Value);
-		}
-
+	public class AniDBRequest
+	{
 		public readonly string Command;
 		public readonly IEnumerable<KeyValuePair<string, string>> ParValues;
 		public readonly AniDBTaggedResponseCallback Callback;
 		public readonly string Tag;
 
-		public AniDBRequest(string command, AniDBTaggedResponseCallback callback, IEnumerable<KeyValuePair<string, string>> parValues) : this(command, callback)
-		{
-			ParValues = parValues;
-		}
+		public AniDBRequest(string command, AniDBTaggedResponseCallback callback = null,
+		                    params KeyValuePair<string, string>[] args)
+			: this(command, callback, args.ToDictionary(a => a.Key, a => a.Value)) {}
 
-		private AniDBRequest(string command, AniDBTaggedResponseCallback callback)
+		public AniDBRequest(string command, AniDBTaggedResponseCallback callback,
+		                    IEnumerable<KeyValuePair<string, string>> parValues)
 		{
 			Command = command;
 			Callback = callback;
 
 			Tag = ShortGuid.NewGuid().ToString();
+
+			ParValues = parValues;
 		}
 
-		public override string ToString() {
+		public override string ToString()
+		{
 			StringBuilder returnString = new StringBuilder(Command + " ");
 
 			foreach (var s in ParValues)
@@ -44,7 +42,8 @@ namespace libAniDB.NET
 			return returnString.ToString();
 		}
 
-		public byte[] ToByteArray(Encoding encoding) {
+		public byte[] ToByteArray(Encoding encoding)
+		{
 			return encoding.GetBytes(ToString());
 		}
 	}
