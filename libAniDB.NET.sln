@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ED2K", "ED2K\ED2K.csproj", "{FF789771-DE56-4234-9773-DBF5EAB0DD2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libAniDB.NET", "libAniDB.NET\libAniDB.NET.csproj", "{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libAniDB.NET.Tests", "libAniDB.NET.Tests\libAniDB.NET.Tests.csproj", "{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|x64.Build.0 = Release|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF789771-DE56-4234-9773-DBF5EAB0DD2A}.Release|x86.Build.0 = Release|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Release|x64.ActiveCfg = Release|Any CPU
+		{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}.Release|x86.ActiveCfg = Release|Any CPU
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Debug|x64.ActiveCfg = Debug|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Debug|x86.ActiveCfg = Debug|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Debug|x86.Build.0 = Debug|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Release|Mixed Platforms.Build.0 = Release|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Release|x64.ActiveCfg = Release|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Release|x86.ActiveCfg = Release|x86
+		{43B2B710-2ECE-4DC2-BB6F-6F0BF5BA40BC}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal
