@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
-namespace AniDB.Tests {
+namespace libAniDB.NET.Tests {
 	[TestFixture]
 	class AnimeTests
 	{

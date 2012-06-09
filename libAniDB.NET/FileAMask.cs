@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace libAniDB.Net {
+namespace libAniDB.NET {
 	public partial class AniDBFile
 	{
 		public class AMask {

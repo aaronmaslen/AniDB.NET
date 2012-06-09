@@ -17,12 +17,12 @@ namespace libAniDB.NET {
 			OriginalString = encoding == null ?
 				Encoding.ASCII.GetString(responseData) : encoding.GetString(responseData);
 			
-			string[] responseLines = OriginalString.Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+			string[] responseLines = OriginalString.Split(new [] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
 
 			short returnCode;
 
 			string[] response =
-				responseLines[0].Split(new char[] {' '}, short.TryParse(responseLines[0].Split(' ')[0], out returnCode) ? 2 : 3);
+				responseLines[0].Split(new [] {' '}, short.TryParse(responseLines[0].Split(' ')[0], out returnCode) ? 2 : 3);
 
 			Tag = response.Length == 3 ? response[0] : "";
 			ReturnCode = (AniDBReturnCode) (response.Length == 3 ? short.Parse(response[1]) : returnCode);

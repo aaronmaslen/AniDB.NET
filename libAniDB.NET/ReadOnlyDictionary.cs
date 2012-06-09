@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace libAniDB.Net {
+namespace libAniDB.NET {
 	public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
 		private readonly IDictionary<TKey, TValue> _internalDictionary;
 

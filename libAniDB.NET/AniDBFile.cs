@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using libAniDB.NET;
 
-namespace libAniDB.Net {
+namespace libAniDB.NET {
 	public partial class AniDBFile {
 		[Flags]
 		public enum StateMask : short

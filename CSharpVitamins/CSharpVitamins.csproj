@@ -5,14 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}</ProjectGuid>
+    <ProjectGuid>{147D78BE-8CA5-46A9-8485-2D5BAAA40E78}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>libAniDB.NET</RootNamespace>
-    <AssemblyName>libAniDB.NET</AssemblyName>
+    <RootNamespace>CSharpVitamins</RootNamespace>
+    <AssemblyName>CSharpVitamins</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,8 +21,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +29,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>libAniDB.NET.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,24 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AniDBCommands.cs" />
-    <Compile Include="AniDBRequest.cs" />
-    <Compile Include="Anime.cs" />
-    <Compile Include="FileAMask.cs" />
-    <Compile Include="AniDBResponse.cs" />
-    <Compile Include="AniDB.cs" />
-    <Compile Include="AniDBFile.cs" />
-    <Compile Include="FMask.cs" />
-    <Compile Include="IAniDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadOnlyDictionary.cs" />
-    <Compile Include="TokenBucket.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CSharpVitamins\CSharpVitamins.csproj">
-      <Project>{147D78BE-8CA5-46A9-8485-2D5BAAA40E78}</Project>
-      <Name>CSharpVitamins</Name>
-    </ProjectReference>
+    <Compile Include="ShortGuid.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

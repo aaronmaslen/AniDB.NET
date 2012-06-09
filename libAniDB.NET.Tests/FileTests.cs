@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace AniDB.Tests
+namespace libAniDB.NET.Tests
 {
 	[TestFixture]
 	class FileTests

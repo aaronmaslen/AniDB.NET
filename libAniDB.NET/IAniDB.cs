@@ -1,5 +1,5 @@
 using System.Text;
-using libAniDB.Net;
+using libAniDB.NET;
 
 namespace libAniDB.NET
 {
@@ -24,17 +24,11 @@ namespace libAniDB.NET
 		bool LoggedIn { get; }
 
 		/// <summary>
-		/// Stops all background threads. May be removed in later versions
-		/// </summary>
-		void Stop();
-
-		/// <summary>
 		/// Auth with the AniDB server.
 		/// </summary>
 		/// <param name="user">User name</param>
 		/// <param name="pass">Password</param>
 		/// <param name="callback">Response callback</param>
-		/// <param name="tag">Response tag</param>
 		/// <param name="nat">Returns the detected</param>
 		/// <param name="comp">Enable compression</param>
 		/// <param name="mtu">Maximum Transmission Unit size of responses (in bytes). Valid values are in the range 400-1400</param>
@@ -59,79 +53,65 @@ namespace libAniDB.NET
 		///   {str image server name}</description></item>
 		/// </list>
 		/// </remarks>
-		void Auth(string user, string pass, AniDBTaggedResponseCallback callback = null, string tag = "", bool nat = false, bool comp = false, int mtu = 0, bool imgServer = false);
+		void Auth(string user, string pass, AniDBTaggedResponseCallback callback = null, bool nat = false, bool comp = false, int mtu = 0, bool imgServer = false);
 
 		/// <summary>
 		/// Logs out, must be logged in
 		/// </summary>
 		/// <param name="callback">Response callback</param>
-		/// <param name="tag">Response tag</param>
-		void Logout(AniDBTaggedResponseCallback callback = null, string tag = "");
+		void Logout(AniDBTaggedResponseCallback callback = null);
 
 		/// <summary>
 		/// Not Yet Implemented
 		/// </summary>
 		/// <param name="user">Use this user's API key to encrypt the session</param>
 		/// <param name="callback">Response callback</param>
-		/// <param name="tag">Response tag</param>
-		void Encrypt(string user, AniDBTaggedResponseCallback callback = null, string tag = "");
+		void Encrypt(string user, AniDBTaggedResponseCallback callback = null);
 
 		/// <summary>
 		/// Ping Command. Can be used to detect whether the outgoing port number has been changed by a NAT router (set nat to true) or to keep a "connection" alive.
 		/// </summary>
 		/// <param name="nat">If true(default), returns the outgoing port number.</param>
 		/// <param name="callback">Response callback</param>
-		/// <param name="tag">Response tag</param>
-		void Ping(bool nat = false, AniDBTaggedResponseCallback callback = null, string tag = "");
+		void Ping(bool nat = false, AniDBTaggedResponseCallback callback = null);
 
 		/// <summary>
 		/// Changes the encoding method.
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="callback"></param>
-		/// <param name="tag"></param>
-		void ChangeEncoding(string name, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Uptime(AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Version(AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Anime(int aID, string aMask = "", AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Anime(string aName, string aMask = "", AniDBTaggedResponseCallback callback = null, string tag = "");
-		void AnimeDesc(int aID, int partNo, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Calendar(AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Character(int charID, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Creator(int creatorID, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Episode(int eID, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Episode(string aName, int epNo, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Episode(int aID, int epNo, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void File(int fID, string fMask, string aMask, AniDBTaggedResponseCallback callback = null, string tag = "");
+		void ChangeEncoding(string name, AniDBTaggedResponseCallback callback = null);
+		void Uptime(AniDBTaggedResponseCallback callback = null);
+		void Version(AniDBTaggedResponseCallback callback = null);
+		void Anime(int aID, string aMask = "", AniDBTaggedResponseCallback callback = null);
+		void Anime(string aName, string aMask = "", AniDBTaggedResponseCallback callback = null);
+		void AnimeDesc(int aID, int partNo, AniDBTaggedResponseCallback callback = null);
+		void Calendar(AniDBTaggedResponseCallback callback = null);
+		void Character(int charID, AniDBTaggedResponseCallback callback = null);
+		void Creator(int creatorID, AniDBTaggedResponseCallback callback = null);
+		void Episode(int eID, AniDBTaggedResponseCallback callback = null);
+		void Episode(string aName, int epNo, AniDBTaggedResponseCallback callback = null);
+		void Episode(int aID, int epNo, AniDBTaggedResponseCallback callback = null);
+		void File(int fID, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
-		void File(long size, string ed2K, string fMask, string aMask, AniDBTaggedResponseCallback callback = null,
-		                          string tag = "");
+		void File(long size, string ed2K, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
 		void File(string aName, string gName, int epNo, string fMask, string aMask,
-		                          AniDBTaggedResponseCallback callback = null, string tag = "");
+		                          AniDBTaggedResponseCallback callback = null);
 
-		void File(string aName, int gID, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null,
-		                          string tag = "");
+		void File(string aName, int gID, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
-		void File(int aID, string gName, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null,
-		                          string tag = "");
+		void File(int aID, string gName, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
-		void File(int aID, int gID, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null,
-		                          string tag = "");
+		void File(int aID, int gID, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
-		void Group(int gID, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void Group(string gName, AniDBTaggedResponseCallback callback = null, string tag = "");
-		void GroupStatus(int aID, int state = 0, AniDBTaggedResponseCallback callback = null, string tag = "");
+		void Group(int gID, AniDBTaggedResponseCallback callback = null);
+		void Group(string gName, AniDBTaggedResponseCallback callback = null);
+		void GroupStatus(int aID, int state = 0, AniDBTaggedResponseCallback callback = null);
 	}
 
 	public delegate void AniDBTaggedResponseCallback(AniDBResponse response, AniDBRequest request);
 	public delegate void AniDBUnTaggedResponseCallback(AniDBResponse response);
-
-	public static class AniDBFactory {
-		public static IAniDB GetNewAniDBInterface(int localPort, string clientName = "libanidbdotnet", int clientVer = 1, Encoding encoding = null, string remoteHostName = "api.anidb.net", int remotePort = 9000) {
-			return new libAniDB.NET.AniDB(localPort, clientName, clientVer, encoding, remoteHostName, remotePort);
-		}
-	}
 
 	public enum AniDBReturnCode : short {
 		// ReSharper disable InconsistentNaming

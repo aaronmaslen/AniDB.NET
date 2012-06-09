@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading;
 
-namespace libAniDB.Net {
+namespace libAniDB.NET {
 	class TokenBucket<T> {
 		private uint _outDelay;
 		public uint OutDelay
