@@ -23,9 +23,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Text;
-using libAniDB.NET;
-
 namespace libAniDB.NET
 {
 	/// <summary>
@@ -33,12 +30,6 @@ namespace libAniDB.NET
 	/// </summary>
 	public interface IAniDB
 	{
-		/// <summary>
-		/// Invoked after a packet is recieved and processed internally.
-		/// If you want to do something with the packet before the library handles it, create a tagged request
-		/// </summary>
-		event AniDBUnTaggedResponseCallback ResponseRecieved;
-
 		///// <summary>
 		///// True if encryption is enabled
 		///// </summary>
@@ -80,7 +71,7 @@ namespace libAniDB.NET
 		/// </list>
 		/// </remarks>
 		void Auth(string user, string pass, AniDBTaggedResponseCallback callback = null, bool nat = false, bool comp = false,
-		          int mtu = 0, bool imgServer = false);
+				  int mtu = 0, bool imgServer = false);
 
 		/// <summary>
 		/// Logs out, must be logged in
@@ -125,7 +116,7 @@ namespace libAniDB.NET
 		void File(long size, string ed2K, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
 		void File(string aName, string gName, int epNo, string fMask, string aMask,
-		          AniDBTaggedResponseCallback callback = null);
+				  AniDBTaggedResponseCallback callback = null);
 
 		void File(string aName, int gID, int epNo, string fMask, string aMask, AniDBTaggedResponseCallback callback = null);
 
@@ -139,8 +130,6 @@ namespace libAniDB.NET
 	}
 
 	public delegate void AniDBTaggedResponseCallback(AniDBResponse response, AniDBRequest request);
-
-	public delegate void AniDBUnTaggedResponseCallback(AniDBResponse response);
 
 	public enum AniDBReturnCode : short
 	{

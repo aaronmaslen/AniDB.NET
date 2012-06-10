@@ -23,7 +23,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
@@ -35,12 +34,6 @@ namespace libAniDB.NET
 	/// </summary>
 	public partial class AniDB
 	{
-		/// <summary>
-		/// Invoked after a packet is recieved and processed internally.
-		/// If you want to do something with the packet before the library handles it, create a tagged request
-		/// </summary>
-		public event AniDBUnTaggedResponseCallback ResponseRecieved;
-
 		public const int ProtocolVersion = 3;
 
 		//public bool EncryptionEnabled { get; private set; }
@@ -77,13 +70,21 @@ namespace libAniDB.NET
 
 			_encoding = encoding ?? Encoding.ASCII;
 
+
+
 			_sendBucket = new TokenBucket<AniDBRequest>(MinSendDelay, AvgSendDelay,
-			                                            BurstLength / (AvgSendDelay - MinSendDelay), true, null);
+			                                            BurstLength / (AvgSendDelay - MinSendDelay), true,
+														SendPacket);
 		}
 
-		private void SendCommand(AniDBRequest request)
+		private void QueueCommand(AniDBRequest request)
 		{
-			throw new NotImplementedException();
+			_sendBucket.Input(request);
+		}
+
+		private void SendPacket(AniDBRequest request)
+		{
+			request.ToByteArray(_encoding);
 		}
 	}
 }
