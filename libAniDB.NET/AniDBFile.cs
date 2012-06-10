@@ -146,7 +146,7 @@ namespace libAniDB.NET
 
 		public AniDBFile(AniDBResponse fileResponse, FMask fMask, AMask aMask) : this()
 		{
-			if (fileResponse.ReturnCode != AniDBReturnCode.FILE)
+			if (fileResponse.Code != AniDBResponse.ReturnCode.FILE)
 				throw new ArgumentException("Response is not a FILE response");
 
 			List<string> dataFields = new List<string>();

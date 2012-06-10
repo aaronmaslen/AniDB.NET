@@ -23,9 +23,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace libAniDB.NET
 {
@@ -36,19 +40,11 @@ namespace libAniDB.NET
 	{
 		public const int ProtocolVersion = 3;
 
-		//public bool EncryptionEnabled { get; private set; }
-		//private byte[] _encryptionKey;
-		public string ApiPass;
-
-		public bool LoggedIn { get; private set; }
 		public string SessionKey { get; private set; }
 
-		public int Timeout;
+		public int Timeout { get; set; }
 
-		//private readonly ConcurrentList<AniDBRequest> _sentRequests;
-		//private readonly ConcurrentList<string> _tags;
-
-		private readonly ConcurrentStack<AniDBRequest> _sentRequests;
+		private readonly ConcurrentDictionary<string, AniDBRequest> _sentRequests;
 		private readonly ConcurrentBag<string> _tags;
 
 		private readonly TokenBucket<AniDBRequest> _sendBucket;
@@ -62,15 +58,24 @@ namespace libAniDB.NET
 		public readonly string ClientName;
 		public readonly int ClientVer;
 
+		private readonly UdpClient _udpClient;
+
 		public AniDB(int localPort, string clientName = "libanidbdotnet", int clientVer = 1, Encoding encoding = null,
-		             string remoteHostName = "api.anidb.net", int remotePort = 9000, int timeout = 20000)
+		             string remoteHostName = "api.anidb.net", int remotePort = 9000)
 		{
+			Timeout = 20000;
+
 			ClientName = clientName;
 			ClientVer = clientVer;
 
 			_encoding = encoding ?? Encoding.ASCII;
 
+			_sentRequests = new ConcurrentDictionary<string, AniDBRequest>();
 
+			_udpClient = new UdpClient(remoteHostName, remotePort);
+			_udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, localPort));
+
+			new Thread(RecievePackets).Start();
 
 			_sendBucket = new TokenBucket<AniDBRequest>(MinSendDelay, AvgSendDelay,
 			                                            BurstLength / (AvgSendDelay - MinSendDelay), true,
@@ -79,12 +84,56 @@ namespace libAniDB.NET
 
 		private void QueueCommand(AniDBRequest request)
 		{
+			if(_sentRequests.ContainsKey(request.Tag))
+				throw new ArgumentException("A request with that tag has already been sent");
+
 			_sendBucket.Input(request);
 		}
 
 		private void SendPacket(AniDBRequest request)
 		{
 			request.ToByteArray(_encoding);
+
+			byte[] requestBytes = request.ToByteArray(_encoding);
+
+			_udpClient.Send(requestBytes, requestBytes.Count());
+
+			if (!_sentRequests.TryAdd(request.Tag, request))
+				request.Callback(null, request);
+		}
+
+		private void RecievePackets()
+		{
+			while(_udpClient.Client.Connected)
+			{
+				IPEndPoint remoteEP = (IPEndPoint)_udpClient.Client.RemoteEndPoint;
+				remoteEP = new IPEndPoint(remoteEP.Address, remoteEP.Port);
+
+				byte[] responseBytes = _udpClient.Receive(ref remoteEP);
+				AniDBResponse response = new AniDBResponse(responseBytes);
+				new Thread(() => HandleResponse(response)).Start();
+			}
+		}
+
+		private void HandleResponse(AniDBResponse response)
+		{
+			if (response.Code == AniDBResponse.ReturnCode.LOGIN_ACCEPTED ||
+				response.Code == AniDBResponse.ReturnCode.LOGIN_ACCEPTED_NEW_VER)
+					SessionKey = response.ReturnString.Split(new [] {' '}, 1)[0];
+
+			if (response.Code == AniDBResponse.ReturnCode.LOGGED_OUT ||
+				response.Code == AniDBResponse.ReturnCode.LOGIN_FAILED ||
+				response.Code == AniDBResponse.ReturnCode.LOGIN_FIRST)
+					SessionKey = "";
+
+			AniDBRequest request;
+			if(_sentRequests.TryRemove(response.Tag, out request));
+				request.Callback(response, request);
+		}
+
+		public ~AniDB()
+		{
+			_udpClient.Close();
 		}
 	}
 }
