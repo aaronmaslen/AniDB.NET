@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -86,6 +87,9 @@ namespace libAniDB.NET
 		{
 			if(_sentRequests.ContainsKey(request.Tag))
 				throw new ArgumentException("A request with that tag has already been sent");
+
+			if(SessionKey != "")
+				((Dictionary<string,string>)request.ParValues).Add("s", SessionKey);
 
 			_sendBucket.Input(request);
 		}
