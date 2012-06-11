@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libAniDB.NET.Tests", "libAn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpVitamins", "CSharpVitamins\CSharpVitamins.csproj", "{147D78BE-8CA5-46A9-8485-2D5BAAA40E78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniDBConsoleTest", "AniDBConsoleTest\AniDBConsoleTest.csproj", "{E8C74DED-EE15-4F82-9273-1840785ECA23}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -79,6 +81,18 @@ Global
 		{147D78BE-8CA5-46A9-8485-2D5BAAA40E78}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{147D78BE-8CA5-46A9-8485-2D5BAAA40E78}.Release|x64.ActiveCfg = Release|Any CPU
 		{147D78BE-8CA5-46A9-8485-2D5BAAA40E78}.Release|x86.ActiveCfg = Release|Any CPU
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Debug|x64.ActiveCfg = Debug|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Debug|x86.ActiveCfg = Debug|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Debug|x86.Build.0 = Debug|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Release|Any CPU.ActiveCfg = Release|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Release|Mixed Platforms.Build.0 = Release|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Release|x64.ActiveCfg = Release|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Release|x86.ActiveCfg = Release|x86
+		{E8C74DED-EE15-4F82-9273-1840785ECA23}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

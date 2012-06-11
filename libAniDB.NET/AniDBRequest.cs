@@ -1,4 +1,4 @@
-﻿/* Copyright 2011 Aaron Maslen. All rights reserved.
+﻿/* Copyright 2012 Aaron Maslen. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -34,14 +34,14 @@ namespace libAniDB.NET
 	{
 		public readonly string Command;
 		public readonly IEnumerable<KeyValuePair<string, string>> ParValues;
-		public readonly AniDBTaggedResponseCallback Callback;
+		public readonly AniDBResponseCallback Callback;
 		public readonly string Tag;
 
-		public AniDBRequest(string command, AniDBTaggedResponseCallback callback = null,
+		public AniDBRequest(string command, AniDBResponseCallback callback = null,
 		                    params KeyValuePair<string, string>[] args)
 			: this(command, callback, args.ToDictionary(a => a.Key, a => a.Value)) {}
 
-		public AniDBRequest(string command, AniDBTaggedResponseCallback callback,
+		public AniDBRequest(string command, AniDBResponseCallback callback,
 		                    IEnumerable<KeyValuePair<string, string>> parValues)
 		{
 			Command = command;

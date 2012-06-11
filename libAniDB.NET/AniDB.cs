@@ -1,4 +1,4 @@
-﻿/* Copyright 2011 Aaron Maslen. All rights reserved.
+﻿/* Copyright 2012 Aaron Maslen. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,7 +37,7 @@ namespace libAniDB.NET
 	/// <summary>
 	/// Implementation of the IAniDB interface
 	/// </summary>
-	public partial class AniDB
+	public partial class AniDB : IDisposable
 	{
 		public const int ProtocolVersion = 3;
 
@@ -60,6 +60,8 @@ namespace libAniDB.NET
 		public readonly int ClientVer;
 
 		private readonly UdpClient _udpClient;
+		private readonly ManualResetEvent _responseWaitHandle;
+		private bool _recieving;
 
 		public AniDB(int localPort, string clientName = "libanidbdotnet", int clientVer = 1, Encoding encoding = null,
 		             string remoteHostName = "api.anidb.net", int remotePort = 9000)
@@ -73,8 +75,10 @@ namespace libAniDB.NET
 
 			_sentRequests = new ConcurrentDictionary<string, AniDBRequest>();
 
-			_udpClient = new UdpClient(remoteHostName, remotePort);
-			_udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, localPort));
+			_udpClient = new UdpClient(new IPEndPoint(IPAddress.Any, localPort));
+			_udpClient.Connect(remoteHostName, remotePort);
+			_responseWaitHandle = new ManualResetEvent(false);
+			_recieving = true;
 
 			new Thread(RecievePackets).Start();
 
@@ -108,14 +112,31 @@ namespace libAniDB.NET
 
 		private void RecievePackets()
 		{
-			while(_udpClient.Client.Connected)
+			while(_recieving)
 			{
 				IPEndPoint remoteEP = (IPEndPoint)_udpClient.Client.RemoteEndPoint;
 				remoteEP = new IPEndPoint(remoteEP.Address, remoteEP.Port);
 
-				byte[] responseBytes = _udpClient.Receive(ref remoteEP);
+				byte[] responseBytes = null;
+
+				_udpClient.BeginReceive(ar =>
+				                        {
+				                        	responseBytes = _udpClient.EndReceive(ar, ref remoteEP);
+				                        	_responseWaitHandle.Set();
+				                        }, remoteEP);
+
+				_responseWaitHandle.WaitOne();
+
+				if (!_recieving)
+					break;
+
+				if(responseBytes == null)
+					continue;
+
 				AniDBResponse response = new AniDBResponse(responseBytes);
 				new Thread(() => HandleResponse(response)).Start();
+
+				_responseWaitHandle.Reset();
 			}
 		}
 
@@ -135,9 +156,10 @@ namespace libAniDB.NET
 				request.Callback(response, request);
 		}
 
-		~AniDB()
+		public void Dispose()
 		{
-			_udpClient.Close();
+			_recieving = false;
+			_responseWaitHandle.Set();
 		}
 	}
 }
