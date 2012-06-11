@@ -69,7 +69,7 @@ namespace libAniDB.NET
 			StringBuilder sb = new StringBuilder();
 
 			sb.AppendFormat("Tag: {0}\n", Tag);
-			sb.AppendFormat("Return Code: {0}\n", Code);
+			sb.AppendFormat("Return Code: {0} ({1})\n", (short)Code, Code);
 			sb.AppendFormat("Return String: {0}\n", ReturnString);
 
 			sb.Append("Data fields:");

@@ -46,7 +46,6 @@ namespace libAniDB.NET
 		public int Timeout { get; set; }
 
 		private readonly ConcurrentDictionary<string, AniDBRequest> _sentRequests;
-		private readonly ConcurrentBag<string> _tags;
 
 		private readonly TokenBucket<AniDBRequest> _sendBucket;
 
@@ -82,6 +81,7 @@ namespace libAniDB.NET
 
 			new Thread(RecievePackets).Start();
 
+			//Magical maths that turns the burst length into a number of tokens (in this case, 30)
 			_sendBucket = new TokenBucket<AniDBRequest>(MinSendDelay, AvgSendDelay,
 			                                            BurstLength / (AvgSendDelay - MinSendDelay), true,
 														SendPacket);

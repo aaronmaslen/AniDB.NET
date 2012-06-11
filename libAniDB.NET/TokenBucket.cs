@@ -28,10 +28,19 @@ using System.Threading;
 
 namespace libAniDB.NET
 {
+	/// <summary>
+	/// Implementation of the "token bucket" rate-limiting algorithm. Allows for a "bursty" rate that normalises over time to a 
+	/// lesser rate. Items are enqueued with the EnqueueItem method and a callback (TokenBucketCallback) is invoked when they are
+	/// dequeued.
+	/// </summary>
+	/// <typeparam name="T">Type of object to be enqueued.</typeparam>
 	internal class TokenBucket<T>
 	{
 		private uint _outDelay;
 
+		/// <summary>
+		/// Gets or sets the periodic delay before the output callback is called. This controls the maximum "bursty" rate.
+		/// </summary>
 		public uint OutDelay
 		{
 			get { return _outDelay; }
@@ -44,6 +53,9 @@ namespace libAniDB.NET
 
 		private uint _tokenAddDelay;
 
+		/// <summary>
+		/// Gets or sets the periodic delay before adding a token to the bucket. This controls the minimum rate.
+		/// </summary>
 		public uint TokenAddDelay
 		{
 			get { return _tokenAddDelay; }
@@ -54,6 +66,9 @@ namespace libAniDB.NET
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the maximum tokens allowed in the bucket. This controls the length of a "burst".
+		/// </summary>
 		public uint TokenCapacity { get; set; }
 
 		private readonly Timer _outTimer;
@@ -63,8 +78,20 @@ namespace libAniDB.NET
 
 		private uint _tokens;
 
+		/// <summary>
+		/// Invoked by TokenBucket when an item is removed.
+		/// </summary>
+		/// <param name="output">Dequeued item</param>
 		public delegate void TokenBucketCallBack(T output);
 
+		/// <summary>
+		/// Constructor for the TokenBucket class.
+		/// </summary>
+		/// <param name="outDelay">Periodic delay before the output callback is called. This controls the maximum "bursty" rate.</param>
+		/// <param name="tokenAddDelay">Periodic delay before adding a token to the bucket. This controls the minimum rate.</param>
+		/// <param name="tokenCapacity">Maximum number of tokens allowed in the bucket. This controls the length of a "burst".</param>
+		/// <param name="startFilled">If true, allows a burst at the start, otherwise starts at the minimum rate.</param>
+		/// <param name="outputCallBack">Callback to be invoked periodically.</param>
 		public TokenBucket(uint outDelay, uint tokenAddDelay, uint tokenCapacity, bool startFilled,
 		                   TokenBucketCallBack outputCallBack)
 		{
@@ -90,7 +117,7 @@ namespace libAniDB.NET
 			{
 				if (_outputQueue.IsEmpty)
 					return;
-			} while (!_outputQueue.TryDequeue(out outputObject)); //This is probably VERY bad... ohwell, I'll fix later
+			} while (!_outputQueue.TryDequeue(out outputObject)); //TODO: This is probably bad... fix it
 
 			_tokens--;
 
@@ -103,6 +130,10 @@ namespace libAniDB.NET
 				_tokens++;
 		}
 
+		/// <summary>
+		/// Adds an item to the bucket's input queue.
+		/// </summary>
+		/// <param name="input">Item to be enqueued.</param>
 		public void Input(T input)
 		{
 			_outputQueue.Enqueue(input);

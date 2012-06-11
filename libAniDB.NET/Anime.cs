@@ -584,8 +584,7 @@ namespace libAniDB.NET
 				else if (AMaskTypes[flag] == typeof (List<string>))
 					//TODO: Make sure these are the only possibilities (and are the right choices)
 
-					field = new List<string>(dataFields[currentIndex].Split(
-					                                                        flag == AMask.AMaskValues.CategoryList ? ',' : '\''));
+					field = new List<string>(dataFields[currentIndex].Split(flag == AMask.AMaskValues.CategoryList ? ',' : '\''));
 				else if (AMaskTypes[flag] == typeof (List<AIDType>))
 				{
 					field = new List<AIDType>();
