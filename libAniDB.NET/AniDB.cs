@@ -131,11 +131,11 @@ namespace libAniDB.NET
 					SessionKey = "";
 
 			AniDBRequest request;
-			if(_sentRequests.TryRemove(response.Tag, out request));
+			if(_sentRequests.TryRemove(response.Tag, out request))
 				request.Callback(response, request);
 		}
 
-		public ~AniDB()
+		~AniDB()
 		{
 			_udpClient.Close();
 		}
