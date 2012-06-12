@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AniDBTests.cs" />
     <Compile Include="AnimeTests.cs" />
     <Compile Include="FileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

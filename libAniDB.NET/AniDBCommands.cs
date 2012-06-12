@@ -33,7 +33,7 @@ namespace libAniDB.NET
 	{
 		//--- Auth ---\\
 
-		public void Auth(string user, string pass, AniDBResponseCallback callback = null, bool nat = false,
+		public void Auth(string user, string pass, AniDBResponseCallback callback, bool nat = false,
 		                 bool comp = false, int mtu = 0, bool imgServer = false)
 		{
 			Dictionary<string, string> parValues =
@@ -60,20 +60,20 @@ namespace libAniDB.NET
 		}
 
 
-		public void Logout(AniDBResponseCallback callback = null)
+		public void Logout(AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("LOGOUT", callback));
 		}
 
 
-		public void Encrypt(string user, AniDBResponseCallback callback = null)
+		public void Encrypt(string user, AniDBResponseCallback callback)
 		{
 			throw new NotImplementedException();
 		}
 
 		//--- Misc ---\\
 
-		public void Ping(bool nat = false, AniDBResponseCallback callback = null)
+		public void Ping(AniDBResponseCallback callback, bool nat = false)
 		{
 			Dictionary<string, string> parValues = new Dictionary<string, string>();
 
@@ -83,46 +83,46 @@ namespace libAniDB.NET
 			QueueCommand(new AniDBRequest("PING", callback, parValues));
 		}
 
-		public void ChangeEncoding(string name, AniDBResponseCallback callback = null)
+		public void ChangeEncoding(string name, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("ENCODING", callback, new KeyValuePair<string, string>("name", name)));
 		}
 
-		public void Uptime(AniDBResponseCallback callback = null)
+		public void Uptime(AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("UPTIME", callback));
 		}
 
-		public void Version(AniDBResponseCallback callback = null)
+		public void Version(AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("VERSION", callback));
 		}
 
 		//--- Data ---\\
 
-		public void Anime(int aID, string aMask = "", AniDBResponseCallback callback = null)
+		public void Anime(int aID, AniDBResponseCallback callback, Anime.AMask aMask = null)
 		{
 			Dictionary<string, string> parValues = new Dictionary<string, string>
 			                                       { { "aid", aID.ToString(CultureInfo.InvariantCulture) } };
 
-			if (aMask != "")
-				parValues.Add("amask", aMask);
+			if (aMask != null)
+				parValues.Add("amask", aMask.MaskString);
 
 			QueueCommand(new AniDBRequest("ANIME", callback, parValues));
 		}
 
-		public void Anime(string aName, string aMask = "", AniDBResponseCallback callback = null)
+		public void Anime(string aName, AniDBResponseCallback callback, Anime.AMask aMask = null)
 		{
 			Dictionary<string, string> parValues = new Dictionary<string, string> { { "aname", aName } };
 
-			if (aMask != "")
-				parValues.Add("amask", aMask);
+			if (aMask != null)
+				parValues.Add("amask", aMask.MaskString);
 
 			QueueCommand(new AniDBRequest("ANIME", callback, parValues));
 		}
 
 
-		public void AnimeDesc(int aID, int partNo, AniDBResponseCallback callback = null)
+		public void AnimeDesc(int aID, int partNo, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("ANIMEDESC", callback,
 			                             new KeyValuePair<string, string>("aid", aID.ToString(CultureInfo.InvariantCulture)),
@@ -130,20 +130,20 @@ namespace libAniDB.NET
 		}
 
 
-		public void Calendar(AniDBResponseCallback callback = null)
+		public void Calendar(AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("CALENDAR", callback));
 		}
 
 
-		public void Character(int charID, AniDBResponseCallback callback = null)
+		public void Character(int charID, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("CHARACTER", callback,
 			                             new KeyValuePair<string, string>("charid", charID.ToString(CultureInfo.InvariantCulture))));
 		}
 
 
-		public void Creator(int creatorID, AniDBResponseCallback callback = null)
+		public void Creator(int creatorID, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("CREATOR", callback,
 			                             new KeyValuePair<string, string>("creatorid",
@@ -151,20 +151,20 @@ namespace libAniDB.NET
 		}
 
 
-		public void Episode(int eID, AniDBResponseCallback callback = null)
+		public void Episode(int eID, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("eID", callback,
 			                             new KeyValuePair<string, string>("eid", eID.ToString(CultureInfo.InvariantCulture))));
 		}
 
-		public void Episode(string aName, int epNo, AniDBResponseCallback callback = null)
+		public void Episode(string aName, int epNo, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("EPISODE", callback,
 			                             new KeyValuePair<string, string>("aname", aName),
 			                             new KeyValuePair<string, string>("epno", epNo.ToString(CultureInfo.InvariantCulture))));
 		}
 
-		public void Episode(int aID, int epNo, AniDBResponseCallback callback = null)
+		public void Episode(int aID, int epNo, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("EPISODE", callback,
 			                             new KeyValuePair<string, string>("aid", aID.ToString(CultureInfo.InvariantCulture)),
@@ -172,81 +172,80 @@ namespace libAniDB.NET
 		}
 
 
-		public void File(int fID, string fMask, string aMask, AniDBResponseCallback callback = null)
+		public void File(int fID, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("FILE", callback,
 			                             new KeyValuePair<string, string>("fid", fID.ToString(CultureInfo.InvariantCulture)),
-			                             new KeyValuePair<string, string>("fmask", fMask),
-			                             new KeyValuePair<string, string>("amask", aMask)));
+			                             new KeyValuePair<string, string>("fmask", fMask.MaskString),
+			                             new KeyValuePair<string, string>("amask", aMask.MaskString)));
 		}
 
-		public void File(long size, string ed2K, string fMask, string aMask, AniDBResponseCallback callback = null)
+		public void File(long size, string ed2K, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("FILE", callback,
 			                             new KeyValuePair<string, string>("size", size.ToString(CultureInfo.InvariantCulture)),
 			                             new KeyValuePair<string, string>("ed2k", ed2K),
-			                             new KeyValuePair<string, string>("fmask", fMask),
-			                             new KeyValuePair<string, string>("amask", aMask)));
+			                             new KeyValuePair<string, string>("fmask", fMask.MaskString),
+			                             new KeyValuePair<string, string>("amask", aMask.MaskString)));
 		}
 
-		public void File(string aName, string gName, int epNo, string fMask, string aMask,
-		                 AniDBResponseCallback callback = null)
+		public void File(string aName, string gName, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("FILE", callback,
 			                             new KeyValuePair<string, string>("aname", aName),
 			                             new KeyValuePair<string, string>("gname", gName),
 			                             new KeyValuePair<string, string>("epno", epNo.ToString(CultureInfo.InvariantCulture)),
-			                             new KeyValuePair<string, string>("fmask", fMask),
-			                             new KeyValuePair<string, string>("amask", aMask)));
+			                             new KeyValuePair<string, string>("fmask", fMask.MaskString),
+			                             new KeyValuePair<string, string>("amask", aMask.MaskString)));
 		}
 
-		public void File(string aName, int gID, int epNo, string fMask, string aMask,
-		                 AniDBResponseCallback callback = null)
+		public void File(string aName, int gID, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask,
+		                 AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("FILE", callback,
 			                             new KeyValuePair<string, string>("aname", aName),
 			                             new KeyValuePair<string, string>("gid", gID.ToString(CultureInfo.InvariantCulture)),
 			                             new KeyValuePair<string, string>("epno", epNo.ToString(CultureInfo.InvariantCulture)),
-			                             new KeyValuePair<string, string>("fmask", fMask),
-			                             new KeyValuePair<string, string>("amask", aMask)));
+			                             new KeyValuePair<string, string>("fmask", fMask.MaskString),
+			                             new KeyValuePair<string, string>("amask", aMask.MaskString)));
 		}
 
-		public void File(int aID, string gName, int epNo, string fMask, string aMask,
-		                 AniDBResponseCallback callback = null)
+		public void File(int aID, string gName, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask,
+		                 AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("FILE", callback,
 			                             new KeyValuePair<string, string>("aid", aID.ToString(CultureInfo.InvariantCulture)),
 			                             new KeyValuePair<string, string>("gname", gName),
 			                             new KeyValuePair<string, string>("epno", epNo.ToString(CultureInfo.InvariantCulture)),
-			                             new KeyValuePair<string, string>("fmask", fMask),
-			                             new KeyValuePair<string, string>("amask", aMask)));
+			                             new KeyValuePair<string, string>("fmask", fMask.MaskString),
+			                             new KeyValuePair<string, string>("amask", aMask.MaskString)));
 		}
 
-		public void File(int aID, int gID, int epNo, string fMask, string aMask, AniDBResponseCallback callback = null)
+		public void File(int aID, int gID, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("FILE", callback,
 			                             new KeyValuePair<string, string>("aid", aID.ToString(CultureInfo.InvariantCulture)),
 			                             new KeyValuePair<string, string>("gid", gID.ToString(CultureInfo.InvariantCulture)),
 			                             new KeyValuePair<string, string>("epno", epNo.ToString(CultureInfo.InvariantCulture)),
-			                             new KeyValuePair<string, string>("fmask", fMask),
-			                             new KeyValuePair<string, string>("amask", aMask)));
+			                             new KeyValuePair<string, string>("fmask", fMask.MaskString),
+			                             new KeyValuePair<string, string>("amask", aMask.MaskString)));
 		}
 
 
-		public void Group(int gID, AniDBResponseCallback callback = null)
+		public void Group(int gID, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("GROUP", callback,
 			                             new KeyValuePair<string, string>("gid", gID.ToString(CultureInfo.InvariantCulture))));
 		}
 
-		public void Group(string gName, AniDBResponseCallback callback = null)
+		public void Group(string gName, AniDBResponseCallback callback)
 		{
 			QueueCommand(new AniDBRequest("GROUP", callback,
 			                             new KeyValuePair<string, string>("gname", gName)));
 		}
 
 
-		public void GroupStatus(int aID, int state = 0, AniDBResponseCallback callback = null)
+		public void GroupStatus(int aID, AniDBResponseCallback callback, int state = 0)
 		{
 			Dictionary<string, string> parValues = new Dictionary<string, string>
 			                                       {

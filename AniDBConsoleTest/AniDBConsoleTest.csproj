@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ED2K\ED2K.csproj">
+      <Project>{FF789771-DE56-4234-9773-DBF5EAB0DD2A}</Project>
+      <Name>ED2K</Name>
+    </ProjectReference>
     <ProjectReference Include="..\libAniDB.NET\libAniDB.NET.csproj">
       <Project>{BB2EB64B-D2D7-4508-A5F1-DEFE7231FF15}</Project>
       <Name>libAniDB.NET</Name>

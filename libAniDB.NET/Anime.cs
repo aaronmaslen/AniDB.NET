@@ -322,7 +322,7 @@ namespace libAniDB.NET
 					#endregion
 				});
 
-		protected Dictionary<AMask.AMaskValues, object> AMaskFields;
+		protected readonly Dictionary<AMask.AMaskValues, object> AMaskFields;
 
 		#region AMask Public Fields
 

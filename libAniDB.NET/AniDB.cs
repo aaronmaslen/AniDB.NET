@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -79,6 +80,8 @@ namespace libAniDB.NET
 			_responseWaitHandle = new ManualResetEvent(false);
 			_recieving = true;
 
+			SessionKey = "";
+
 			new Thread(RecievePackets).Start();
 
 			//Magical maths that turns the burst length into a number of tokens (in this case, 30)
@@ -106,6 +109,8 @@ namespace libAniDB.NET
 
 			_udpClient.Send(requestBytes, requestBytes.Count());
 
+			Debug.Print(requestBytes.ToString());
+
 			if (!_sentRequests.TryAdd(request.Tag, request))
 				request.Callback(null, request);
 		}
@@ -122,6 +127,9 @@ namespace libAniDB.NET
 				_udpClient.BeginReceive(ar =>
 				                        {
 				                        	responseBytes = _udpClient.EndReceive(ar, ref remoteEP);
+
+											Debug.Print(responseBytes.ToString());
+
 				                        	_responseWaitHandle.Set();
 				                        }, remoteEP);
 
@@ -140,11 +148,11 @@ namespace libAniDB.NET
 			}
 		}
 
-		private void HandleResponse(AniDBResponse response)
+		public void HandleResponse(AniDBResponse response)
 		{
 			if (response.Code == AniDBResponse.ReturnCode.LOGIN_ACCEPTED ||
 				response.Code == AniDBResponse.ReturnCode.LOGIN_ACCEPTED_NEW_VER)
-					SessionKey = response.ReturnString.Split(new [] {' '}, 1)[0];
+					SessionKey = response.ReturnString.Split(new [] {' '}, 2)[0];
 
 			if (response.Code == AniDBResponse.ReturnCode.LOGGED_OUT ||
 				response.Code == AniDBResponse.ReturnCode.LOGIN_FAILED ||
