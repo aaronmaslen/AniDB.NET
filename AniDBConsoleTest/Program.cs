@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using ED2K;
@@ -6,13 +7,12 @@ using libAniDB.NET;
 
 namespace AniDBConsoleTest
 {
-	static class Program
+	internal static class Program
 	{
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			using (AniDB aniDB = new AniDB(9001))
 			{
-
 				aniDB.Ping((res, req) =>
 				           {
 				           	Console.WriteLine("Request:");
@@ -32,7 +32,8 @@ namespace AniDBConsoleTest
 				do
 				{
 					Console.WriteLine(
-					                  "{0," + fileHash.ChunkCount.ToString().Length + "}/{1," + fileHash.ChunkCount.ToString().Length +
+									  "{0," + fileHash.ChunkCount.ToString(CultureInfo.CurrentCulture).Length + 
+									  "}/{1," + fileHash.ChunkCount.ToString(CultureInfo.CurrentCulture).Length +
 					                  "}", fileHash.Complete, fileHash.ChunkCount);
 					Thread.Sleep(250);
 				} while (fileHash.Complete < fileHash.ChunkCount);
@@ -43,9 +44,9 @@ namespace AniDBConsoleTest
 
 				ManualResetEvent waitHandle = new ManualResetEvent(false);
 
-				aniDB.Auth("aaron552", "Amdfx64r!ADB", (res, req) =>
+				aniDB.Auth("aaron552", args[1], (res, req) =>
 				                                       {
-														Console.WriteLine(res.ToString());
+				                                       	Console.WriteLine(res.ToString());
 				                                       	waitHandle.Set();
 				                                       });
 
@@ -69,38 +70,38 @@ namespace AniDBConsoleTest
 				                                            AniDBFile.FMask.FMaskValues.SubLanguage);
 
 				AniDBFile.AMask aMask = new AniDBFile.AMask(AniDBFile.AMask.AMaskValues.KanjiName |
-				                                             AniDBFile.AMask.AMaskValues.RomanjiName |
-				                                             AniDBFile.AMask.AMaskValues.EnglishName |
-				                                             AniDBFile.AMask.AMaskValues.ShortNameList |
-				                                             AniDBFile.AMask.AMaskValues.GroupShortName |
-				                                             AniDBFile.AMask.AMaskValues.GroupName |
-				                                             AniDBFile.AMask.AMaskValues.EpNo |
-				                                             AniDBFile.AMask.AMaskValues.TotalEpisodes |
-				                                             AniDBFile.AMask.AMaskValues.HighestEpisodeNumber |
-				                                             AniDBFile.AMask.AMaskValues.Year);
+				                                            AniDBFile.AMask.AMaskValues.RomanjiName |
+				                                            AniDBFile.AMask.AMaskValues.EnglishName |
+				                                            AniDBFile.AMask.AMaskValues.ShortNameList |
+				                                            AniDBFile.AMask.AMaskValues.GroupShortName |
+				                                            AniDBFile.AMask.AMaskValues.GroupName |
+				                                            AniDBFile.AMask.AMaskValues.EpNo |
+				                                            AniDBFile.AMask.AMaskValues.TotalEpisodes |
+				                                            AniDBFile.AMask.AMaskValues.HighestEpisodeNumber |
+				                                            AniDBFile.AMask.AMaskValues.Year);
 
 				aniDB.File((new FileInfo(args[0])).Length, fileHash.Hash, fMask, aMask,
-						   (res, req) =>
-						   {
-							   Console.WriteLine(req);
-							   try
-							   {
-								   Console.WriteLine(new AniDBFile(res, fMask, aMask));
-							   }
-							   catch (Exception e)
-							   {
-								   Console.WriteLine(e.ToString());
-								   Console.WriteLine(res);
-							   }
-						   	waitHandle.Set();
-						   });
+				           (res, req) =>
+				           {
+				           	Console.WriteLine(req);
+				           	try
+				           	{
+				           		Console.WriteLine(new AniDBFile(res, fMask, aMask));
+				           	}
+				           	catch (Exception e)
+				           	{
+				           		Console.WriteLine(e.ToString());
+				           		Console.WriteLine(res);
+				           	}
+				           	waitHandle.Set();
+				           });
 
 				waitHandle.WaitOne();
 				waitHandle.Reset();
 
 				aniDB.Logout((res, req) =>
 				             {
-								Console.WriteLine(req);
+				             	Console.WriteLine(req);
 				             	Console.WriteLine(res.ToString());
 				             	waitHandle.Set();
 				             });
