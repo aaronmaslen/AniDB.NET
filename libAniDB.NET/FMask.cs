@@ -55,6 +55,7 @@ namespace libAniDB.NET
 				MD5 = 32,
 				SHA1 = 16,
 				CRC32 = 8,
+				VideoColorDepth = 2,
 				None = 0
 			}
 
@@ -118,6 +119,7 @@ namespace libAniDB.NET
 				MD5 = (long)Byte2.MD5 << 8 * 3,
 				SHA1 = (long)Byte2.SHA1 << 8 * 3,
 				CRC32 = (long)Byte2.CRC32 << 8 * 3,
+				VideoColorDepth = (long)Byte2.VideoColorDepth << 8 * 3,
 
 				//Byte 3
 				Quality = (long)Byte3.Quality << 8 * 2,
@@ -194,6 +196,7 @@ namespace libAniDB.NET
 					{ FMask.FMaskValues.MD5, typeof (string) },
 					{ FMask.FMaskValues.SHA1, typeof (string) },
 					{ FMask.FMaskValues.CRC32, typeof (string) },
+					{ FMask.FMaskValues.VideoColorDepth, typeof(string) },
 					{ FMask.FMaskValues.Quality, typeof (string) },
 					{ FMask.FMaskValues.Source, typeof (string) },
 					{ FMask.FMaskValues.AudioCodecs, typeof (List<string>) },
@@ -235,6 +238,7 @@ namespace libAniDB.NET
 					{ FMask.FMaskValues.MD5, "MD5 Hash" },
 					{ FMask.FMaskValues.SHA1, "SHA1 Hash" },
 					{ FMask.FMaskValues.CRC32, "CRC32 Hash" },
+					{ FMask.FMaskValues.VideoColorDepth, "Video Color Depth"},
 					{ FMask.FMaskValues.Quality, "Quality" },
 					{ FMask.FMaskValues.Source, "Source" },
 					{ FMask.FMaskValues.AudioCodecs, "Audio Codecs" },
@@ -337,6 +341,12 @@ namespace libAniDB.NET
 		{
 			get { return (string)GetFMaskValue(FMask.FMaskValues.CRC32); }
 			set { SetFMaskValue(FMask.FMaskValues.CRC32, value); }
+		}
+
+		public string VideoColorDepth
+		{
+			get { return (string)GetFMaskValue(FMask.FMaskValues.VideoColorDepth); }
+			set { SetFMaskValue(FMask.FMaskValues.VideoColorDepth, value); }
 		}
 
 		public string Quality
