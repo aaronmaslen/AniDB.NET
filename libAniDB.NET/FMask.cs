@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace libAniDB.NET
 {
-	public partial class AniDBFile
+	public partial class AniDBFile : IAniDBFile
 	{
 		public class FMask
 		{
@@ -70,7 +70,7 @@ namespace libAniDB.NET
 				VideoCodec = 8,
 				VideoBitrate = 4,
 				VideoResolution = 2,
-				FileType = 1,
+				FileExtension = 1,
 				None = 0
 			}
 
@@ -129,7 +129,7 @@ namespace libAniDB.NET
 				VideoCodec = (long)Byte3.VideoCodec << 8 * 2,
 				VideoBitrate = (long)Byte3.VideoBitrate << 8 * 2,
 				VideoResolution = (long)Byte3.VideoResolution << 8 * 2,
-				FileType = (long)Byte3.FileType << 8 * 2,
+				FileExtension = (long)Byte3.FileExtension << 8 * 2,
 
 				//Byte 4
 				DubLanguage = (long)Byte4.DubLanguage << 8 * 1,
@@ -204,7 +204,7 @@ namespace libAniDB.NET
 					{ FMask.FMaskValues.VideoCodec, typeof (string) },
 					{ FMask.FMaskValues.VideoBitrate, typeof (int) },
 					{ FMask.FMaskValues.VideoResolution, typeof (string) },
-					{ FMask.FMaskValues.FileType, typeof (string) },
+					{ FMask.FMaskValues.FileExtension, typeof (string) },
 					{ FMask.FMaskValues.DubLanguage, typeof (List<string>) },
 					{ FMask.FMaskValues.SubLanguage, typeof (List<string>) },
 					{ FMask.FMaskValues.Length, typeof (int) },
@@ -246,7 +246,7 @@ namespace libAniDB.NET
 					{ FMask.FMaskValues.VideoCodec, "Video Codec" },
 					{ FMask.FMaskValues.VideoBitrate, "Video Bitrate" },
 					{ FMask.FMaskValues.VideoResolution, "Video Resolution" },
-					{ FMask.FMaskValues.FileType, "File Extension" },
+					{ FMask.FMaskValues.FileExtension, "File Extension" },
 					{ FMask.FMaskValues.DubLanguage, "Dub Language(s)" },
 					{ FMask.FMaskValues.SubLanguage, "Sub Language(s)" },
 					{ FMask.FMaskValues.Length, "Length" },
@@ -391,10 +391,10 @@ namespace libAniDB.NET
 			set { SetFMaskValue(FMask.FMaskValues.VideoResolution, value); }
 		}
 
-		public string FileType
+		public string FileExtension
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.FileType); }
-			set { SetFMaskValue(FMask.FMaskValues.FileType, value); }
+			get { return (string)GetFMaskValue(FMask.FMaskValues.FileExtension); }
+			set { SetFMaskValue(FMask.FMaskValues.FileExtension, value); }
 		}
 
 		public List<string> DubLanguage
@@ -479,12 +479,12 @@ namespace libAniDB.NET
 
 		protected Dictionary<FMask.FMaskValues, object> FMaskFields;
 
-		public object GetFMaskValue(FMask.FMaskValues f)
+		protected object GetFMaskValue(FMask.FMaskValues f)
 		{
 			return (FMaskFields.ContainsKey(f) ? FMaskFields[f] : null);
 		}
 
-		public void SetFMaskValue(FMask.FMaskValues f, object value)
+		protected void SetFMaskValue(FMask.FMaskValues f, object value)
 		{
 			if (value == null ||
 			    (FMaskTypes[f] == typeof (int) && (int)value == -1) ||

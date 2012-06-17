@@ -30,7 +30,7 @@ using System.Linq;
 
 namespace libAniDB.NET
 {
-	public partial class AniDBFile
+	public partial class AniDBFile : IAniDBFile
 	{
 		[Flags]
 		public enum StateMask : short
@@ -48,7 +48,7 @@ namespace libAniDB.NET
 
 		public int? FID;
 
-		public void AddData(AniDBFile fileResponse)
+		public void DecodeData(AniDBFile fileResponse)
 		{
 			if (FID == null || FID == -1)
 				FID = fileResponse.FID;

@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace libAniDB.NET
 {
-	public partial class AniDBFile
+	public partial class AniDBFile : IAniDBFile
 	{
 		public class AMask
 		{
@@ -332,12 +332,12 @@ namespace libAniDB.NET
 
 		protected Dictionary<AMask.AMaskValues, object> AMaskFields;
 
-		public object GetAMaskValue(AMask.AMaskValues a)
+		protected object GetAMaskValue(AMask.AMaskValues a)
 		{
 			return (AMaskFields.ContainsKey(a) ? AMaskFields[a] : null);
 		}
 
-		public void SetAMaskValue(AMask.AMaskValues a, object value)
+		protected void SetAMaskValue(AMask.AMaskValues a, object value)
 		{
 			if (value == null ||
 			    (AMaskTypes[a] == typeof (int) && (int)value == -1) ||
