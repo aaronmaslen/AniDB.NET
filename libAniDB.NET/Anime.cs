@@ -32,12 +32,26 @@ namespace libAniDB.NET
 {
 	public class Anime
 	{
+		[Flags]
+		public enum DateFlag
+		{
+			None = 0,
+			StartDateUnknownDay = 1,
+			StartDateUnknownMonthDay = 2,
+			EndDateUnknownDay = 4,
+			EndDateUnknownMonthDay = 8,
+			AnimeEnded = 16,
+			StartDateUnknownYear = 32,
+			EndDateUnknownYear = 64,
+		}
+
 		public class AMask
 		{
 			[Flags]
 			public enum Byte1 : byte
 			{
 				AID = 128,
+				DateFlags = 64,
 				Year = 32,
 				Type = 16,
 				RelatedAIDList = 8,
@@ -123,6 +137,7 @@ namespace libAniDB.NET
 			public enum AMaskValues : ulong
 			{
 				AID = (ulong)Byte1.AID << 8 * 6,
+				DateFlags = (ulong)Byte1.DateFlags << 8 * 6,
 				Year = (ulong)Byte1.Year << 8 * 6,
 				Type = (ulong)Byte1.Type << 8 * 6,
 				RelatedAIDList = (ulong)Byte1.RelatedAIDList << 8 * 6,
@@ -224,6 +239,7 @@ namespace libAniDB.NET
 				{
 					#region AMaskTypes
 					{ AMask.AMaskValues.AID, typeof (int) },
+					{ AMask.AMaskValues.DateFlags, typeof(DateFlag) },
 					{ AMask.AMaskValues.Year, typeof (string) },
 					{ AMask.AMaskValues.Type, typeof (string) },
 					{ AMask.AMaskValues.RelatedAIDList, typeof (List<string>) },
@@ -276,6 +292,7 @@ namespace libAniDB.NET
 				{
 					#region AMaskNames
 					{ AMask.AMaskValues.AID, "AID" },
+					{ AMask.AMaskValues.DateFlags, "Date Flags" },
 					{ AMask.AMaskValues.Year, "Year" },
 					{ AMask.AMaskValues.Type, "Type" },
 					{ AMask.AMaskValues.RelatedAIDList, "Related AID List" },
@@ -331,6 +348,12 @@ namespace libAniDB.NET
 			get { return (int?)GetAMaskValue(AMask.AMaskValues.AID); }
 
 			set { SetAMaskValue(AMask.AMaskValues.AID, value); }
+		}
+
+		public DateFlag? DateFlags
+		{
+			get { return (DateFlag?) GetAMaskValue(AMask.AMaskValues.DateFlags); }
+			set { SetAMaskValue(AMask.AMaskValues.DateFlags, value); }
 		}
 
 		public string Year
@@ -592,6 +615,8 @@ namespace libAniDB.NET
 					foreach (string s in dataFields[currentIndex].Split('\''))
 						((List<AIDType>)field).Add((AIDType)int.Parse(s));
 				}
+				else if (AMaskTypes[flag] == typeof(DateFlag))
+					field = (DateFlag) int.Parse(dataFields[currentIndex]);
 
 				currentIndex++;
 
