@@ -30,7 +30,7 @@ using libAniDB.NET;
 
 namespace libAniDB.NET
 {
-	public class Anime
+	public class Anime : IAnime
 	{
 		[Flags]
 		public enum DateFlag
@@ -154,7 +154,7 @@ namespace libAniDB.NET
 
 				Episodes = (ulong)Byte3.Episodes << 8 * 4,
 				HighestEpisodeNumber = (ulong)Byte3.HighestEpisodeNumber << 8 * 4,
-				SpecialEpCount = (ulong)Byte3.SpecialEpCount << 8 * 4,
+				SpecialEpisodeCount = (ulong)Byte3.SpecialEpCount << 8 * 4,
 				AirDate = (ulong)Byte3.AirDate << 8 * 4,
 				EndDate = (ulong)Byte3.EndDate << 8 * 4,
 				Url = (ulong)Byte3.Url << 8 * 4,
@@ -254,7 +254,7 @@ namespace libAniDB.NET
 					{ AMask.AMaskValues.SynonymList, typeof (List<string>) },
 					{ AMask.AMaskValues.Episodes, typeof (int) },
 					{ AMask.AMaskValues.HighestEpisodeNumber, typeof (int) },
-					{ AMask.AMaskValues.SpecialEpCount, typeof (int) },
+					{ AMask.AMaskValues.SpecialEpisodeCount, typeof (int) },
 					{ AMask.AMaskValues.AirDate, typeof (int) },
 					{ AMask.AMaskValues.EndDate, typeof (int) },
 					{ AMask.AMaskValues.Url, typeof (string) },
@@ -307,7 +307,7 @@ namespace libAniDB.NET
 					{ AMask.AMaskValues.SynonymList, "Synonym List" },
 					{ AMask.AMaskValues.Episodes, "Episodes" },
 					{ AMask.AMaskValues.HighestEpisodeNumber, "Highest Episode Number" },
-					{ AMask.AMaskValues.SpecialEpCount, "Special Episodes" },
+					{ AMask.AMaskValues.SpecialEpisodeCount, "Special Episodes" },
 					{ AMask.AMaskValues.AirDate, "Air Date" },
 					{ AMask.AMaskValues.EndDate, "End Date" },
 					{ AMask.AMaskValues.Url, "URL" },
@@ -454,11 +454,11 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.HighestEpisodeNumber, value); }
 		}
 
-		public int? SpecialEpCount
+		public int? SpecialEpisodeCount
 		{
-			get { return (int?)GetAMaskValue(AMask.AMaskValues.SpecialEpCount); }
+			get { return (int?)GetAMaskValue(AMask.AMaskValues.SpecialEpisodeCount); }
 
-			set { SetAMaskValue(AMask.AMaskValues.SpecialEpCount, value); }
+			set { SetAMaskValue(AMask.AMaskValues.SpecialEpisodeCount, value); }
 		}
 
 		public int? AirDate
@@ -554,12 +554,12 @@ namespace libAniDB.NET
 
 		#endregion
 
-		public object GetAMaskValue(AMask.AMaskValues a)
+		protected object GetAMaskValue(AMask.AMaskValues a)
 		{
 			return AMaskFields.ContainsKey(a) ? AMaskFields[a] : null;
 		}
 
-		public void SetAMaskValue(AMask.AMaskValues a, object value)
+		protected void SetAMaskValue(AMask.AMaskValues a, object value)
 		{
 			if (value == null)
 			{

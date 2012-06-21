@@ -54,6 +54,7 @@
     <Compile Include="FMask.cs" />
     <Compile Include="IAniDB.cs" />
     <Compile Include="IAniDBFile.cs" />
+    <Compile Include="IAnime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="TokenBucket.cs" />
