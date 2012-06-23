@@ -46,7 +46,7 @@ namespace libAniDB.NET
 			Censored = 128
 		}
 
-		public int? FID;
+		public int? FID { get; set; }
 
 		public void DecodeData(AniDBFile fileResponse)
 		{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 namespace libAniDB.NET
 {
 	public interface IAniDBFile {
+		int? FID { get; set; }
 		int? AID { get; set; }
 		int? EID { get; set; }
 		int? GID { get; set; }
