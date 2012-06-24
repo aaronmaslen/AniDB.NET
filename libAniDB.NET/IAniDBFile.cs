@@ -9,7 +9,7 @@ namespace libAniDB.NET
 		int? GID { get; set; }
 		int? MyListID { get; set; }
 		Dictionary<int, byte> OtherEpisodes { get; set; }
-		short? IsDeprecated { get; set; }
+		bool? IsDeprecated { get; set; }
 		AniDBFile.StateMask? State { get; set; }
 		long? Size { get; set; }
 		string ED2K { get; set; }

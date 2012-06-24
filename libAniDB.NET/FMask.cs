@@ -189,7 +189,7 @@ namespace libAniDB.NET
 					{ FMask.FMaskValues.GID, typeof (int) },
 					{ FMask.FMaskValues.MyListID, typeof (int) },
 					{ FMask.FMaskValues.OtherEpisodes, typeof (Dictionary<int, byte>) },
-					{ FMask.FMaskValues.IsDeprecated, typeof (short) },
+					{ FMask.FMaskValues.IsDeprecated, typeof (bool) },
 					{ FMask.FMaskValues.State, typeof (StateMask) },
 					{ FMask.FMaskValues.Size, typeof (long) },
 					{ FMask.FMaskValues.ED2K, typeof (string) },
@@ -294,9 +294,9 @@ namespace libAniDB.NET
 			set { SetFMaskValue(FMask.FMaskValues.OtherEpisodes, value); }
 		}
 
-		public short? IsDeprecated
+		public bool? IsDeprecated
 		{
-			get { return (short?)GetFMaskValue(FMask.FMaskValues.IsDeprecated); }
+			get { return (bool?)GetFMaskValue(FMask.FMaskValues.IsDeprecated); }
 			set { SetFMaskValue(FMask.FMaskValues.IsDeprecated, value); }
 		}
 

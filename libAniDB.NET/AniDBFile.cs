@@ -169,17 +169,19 @@ namespace libAniDB.NET
 				object field = null;
 
 				if (dataFields[currentIndex] != "")
-					if (FMaskTypes[flag] == typeof (string))
+					if (FMaskTypes[flag] == typeof(string))
 						field = dataFields[currentIndex];
-					else if (FMaskTypes[flag] == typeof (int))
+					else if (FMaskTypes[flag] == typeof(int))
 						field = int.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof (short))
+					else if (FMaskTypes[flag] == typeof(short))
 						field = short.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof (long))
+					else if (FMaskTypes[flag] == typeof(bool))
+						field = short.Parse(dataFields[currentIndex]) == 1;
+					else if (FMaskTypes[flag] == typeof(long))
 						field = long.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof (StateMask))
+					else if (FMaskTypes[flag] == typeof(StateMask))
 						field = short.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof (Dictionary<int, byte>))
+					else if (FMaskTypes[flag] == typeof(Dictionary<int, byte>))
 					{
 						string[] splitString = dataFields[currentIndex].Split('\'');
 						Dictionary<int, byte> otherEpisodes = new Dictionary<int, byte>();
@@ -190,9 +192,9 @@ namespace libAniDB.NET
 
 						field = otherEpisodes;
 					}
-					else if (FMaskTypes[flag] == typeof (List<string>))
+					else if (FMaskTypes[flag] == typeof(List<string>))
 						field = new List<string>(dataFields[currentIndex].Split('\''));
-					else if (FMaskTypes[flag] == typeof (List<int>))
+					else if (FMaskTypes[flag] == typeof(List<int>))
 						field = dataFields[currentIndex].Split('\'').Select(int.Parse).ToList();
 
 				//Add value to Dictionary), probably unecessary checks
