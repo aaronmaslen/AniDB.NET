@@ -145,15 +145,15 @@ namespace libAniDB.NET
 					{ AMask.AMaskValues.HighestEpisodeNumber, typeof (int) },
 					{ AMask.AMaskValues.Year, typeof (string) },
 					{ AMask.AMaskValues.Type, typeof (string) },
-					{ AMask.AMaskValues.RelatedAIDList, typeof (List<string>) },
-					{ AMask.AMaskValues.RelatedAIDType, typeof (List<string>) },
-					{ AMask.AMaskValues.CategoryList, typeof (List<string>) },
+					{ AMask.AMaskValues.RelatedAIDList, typeof (IList<string>) },
+					{ AMask.AMaskValues.RelatedAIDType, typeof (IList<string>) },
+					{ AMask.AMaskValues.CategoryList, typeof (IList<string>) },
 					{ AMask.AMaskValues.RomanjiName, typeof (string) },
 					{ AMask.AMaskValues.KanjiName, typeof (string) },
 					{ AMask.AMaskValues.EnglishName, typeof (string) },
-					{ AMask.AMaskValues.OtherName, typeof (List<string>) },
-					{ AMask.AMaskValues.ShortNameList, typeof (List<string>) },
-					{ AMask.AMaskValues.SynonymList, typeof (List<string>) },
+					{ AMask.AMaskValues.OtherName, typeof (IList<string>) },
+					{ AMask.AMaskValues.ShortNameList, typeof (IList<string>) },
+					{ AMask.AMaskValues.SynonymList, typeof (IList<string>) },
 					{ AMask.AMaskValues.EpNo, typeof (string) },
 					{ AMask.AMaskValues.EpName, typeof (string) },
 					{ AMask.AMaskValues.EpRomanjiName, typeof (string) },
@@ -220,19 +220,19 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.Type, value); }
 		}
 
-		public List<string> RelatedAIDList
+		public IList<string> RelatedAIDList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDList); }
 			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDList, value); }
 		}
 
-		public List<string> RelatedAIDType
+		public IList<string> RelatedAIDType
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDType); }
 			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDType, value); }
 		}
 
-		public List<string> CategoryList
+		public IList<string> CategoryList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.CategoryList); }
 			set { SetAMaskValue(AMask.AMaskValues.CategoryList, value); }
@@ -256,19 +256,19 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.EnglishName, value); }
 		}
 
-		public List<string> OtherName
+		public IList<string> OtherName
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.OtherName); }
 			set { SetAMaskValue(AMask.AMaskValues.OtherName, value); }
 		}
 
-		public List<string> ShortNameList
+		public IList<string> ShortNameList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.ShortNameList); }
 			set { SetAMaskValue(AMask.AMaskValues.ShortNameList, value); }
 		}
 
-		public List<string> SynonymList
+		public IList<string> SynonymList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.SynonymList); }
 			set { SetAMaskValue(AMask.AMaskValues.SynonymList, value); }

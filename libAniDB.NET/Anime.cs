@@ -370,28 +370,28 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.Type, value); }
 		}
 
-		public List<string> RelatedAIDList
+		public IList<string> RelatedAIDList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDList); }
 
 			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDList, value); }
 		}
 
-		public List<string> RelatedAIDType
+		public IList<string> RelatedAIDType
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDType); }
 
 			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDType, value); }
 		}
 
-		public List<string> CategoryList
+		public IList<string> CategoryList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.CategoryList); }
 
 			set { SetAMaskValue(AMask.AMaskValues.CategoryList, value); }
 		}
 
-		public List<string> CategoryWeightList
+		public IList<string> CategoryWeightList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.CategoryWeightList); }
 
@@ -419,21 +419,21 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.EnglishName, value); }
 		}
 
-		public List<string> OtherName
+		public IList<string> OtherName
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.OtherName); }
 
 			set { SetAMaskValue(AMask.AMaskValues.OtherName, value); }
 		}
 
-		public List<string> ShortNameList
+		public IList<string> ShortNameList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.ShortNameList); }
 
 			set { SetAMaskValue(AMask.AMaskValues.ShortNameList, value); }
 		}
 
-		public List<string> SynonymList
+		public IList<string> SynonymList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.SynonymList); }
 
@@ -489,7 +489,7 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.PicName, value); }
 		}
 
-		public List<string> CategoryIdList
+		public IList<string> CategoryIdList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.CategoryIdList); }
 
@@ -538,7 +538,7 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.ReviewCount, value); }
 		}
 
-		public List<string> AwardList
+		public IList<string> AwardList
 		{
 			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.AwardList); }
 
@@ -604,11 +604,11 @@ namespace libAniDB.NET
 					field = int.Parse(dataFields[currentIndex]);
 				else if (AMaskTypes[flag] == typeof (bool))
 					field = bool.Parse(dataFields[currentIndex]);
-				else if (AMaskTypes[flag] == typeof (List<string>))
+				else if (AMaskTypes[flag] == typeof (IList<string>))
 					//TODO: Make sure these are the only possibilities (and are the right choices)
 
 					field = new List<string>(dataFields[currentIndex].Split(flag == AMask.AMaskValues.CategoryList ? ',' : '\''));
-				else if (AMaskTypes[flag] == typeof (List<AIDType>))
+				else if (AMaskTypes[flag] == typeof (IList<AIDType>))
 				{
 					field = new List<AIDType>();
 

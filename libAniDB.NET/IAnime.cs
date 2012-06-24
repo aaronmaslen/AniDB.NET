@@ -6,16 +6,16 @@ namespace libAniDB.NET
 		int? AID { get; set; }
 		string Year { get; set; }
 		string Type { get; set; }
-		List<string> RelatedAIDList { get; set; }
-		List<string> RelatedAIDType { get; set; }
-		List<string> CategoryList { get; set; }
-		List<string> CategoryWeightList { get; set; }
+		IList<string> RelatedAIDList { get; set; }
+		IList<string> RelatedAIDType { get; set; }
+		IList<string> CategoryList { get; set; }
+		IList<string> CategoryWeightList { get; set; }
 		string RomanjiName { get; set; }
 		string KanjiName { get; set; }
 		string EnglishName { get; set; }
-		List<string> OtherName { get; set; }
-		List<string> ShortNameList { get; set; }
-		List<string> SynonymList { get; set; }
+		IList<string> OtherName { get; set; }
+		IList<string> ShortNameList { get; set; }
+		IList<string> SynonymList { get; set; }
 		int? Episodes { get; set; }
 		int? HighestEpisodeNumber { get; set; }
 		int? SpecialEpisodeCount { get; set; }
@@ -23,14 +23,14 @@ namespace libAniDB.NET
 		int? EndDate { get; set; }
 		string Url { get; set; }
 		string PicName { get; set; }
-		List<string> CategoryIdList { get; set; }
+		IList<string> CategoryIdList { get; set; }
 		int? Rating { get; set; }
 		int? VoteCount { get; set; }
 		int? TempRating { get; set; }
 		int? TempVoteCount { get; set; }
 		int? AverageReviewRating { get; set; }
 		int? ReviewCount { get; set; }
-		List<string> AwardList { get; set; }
+		IList<string> AwardList { get; set; }
 		bool? IsR18Restricted { get; set; }
 	}
 }

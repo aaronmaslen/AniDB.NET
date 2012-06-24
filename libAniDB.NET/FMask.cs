@@ -188,7 +188,7 @@ namespace libAniDB.NET
 					{ FMask.FMaskValues.EID, typeof (int) },
 					{ FMask.FMaskValues.GID, typeof (int) },
 					{ FMask.FMaskValues.MyListID, typeof (int) },
-					{ FMask.FMaskValues.OtherEpisodes, typeof (Dictionary<int, byte>) },
+					{ FMask.FMaskValues.OtherEpisodes, typeof (IDictionary<int, byte>) },
 					{ FMask.FMaskValues.IsDeprecated, typeof (bool) },
 					{ FMask.FMaskValues.State, typeof (StateMask) },
 					{ FMask.FMaskValues.Size, typeof (long) },
@@ -199,14 +199,14 @@ namespace libAniDB.NET
 					{ FMask.FMaskValues.VideoColorDepth, typeof(string) },
 					{ FMask.FMaskValues.Quality, typeof (string) },
 					{ FMask.FMaskValues.Source, typeof (string) },
-					{ FMask.FMaskValues.AudioCodecs, typeof (List<string>) },
-					{ FMask.FMaskValues.AudioBitrates, typeof (List<int>) },
+					{ FMask.FMaskValues.AudioCodecs, typeof (IList<string>) },
+					{ FMask.FMaskValues.AudioBitrates, typeof (IList<int>) },
 					{ FMask.FMaskValues.VideoCodec, typeof (string) },
 					{ FMask.FMaskValues.VideoBitrate, typeof (int) },
 					{ FMask.FMaskValues.VideoResolution, typeof (string) },
 					{ FMask.FMaskValues.FileExtension, typeof (string) },
-					{ FMask.FMaskValues.DubLanguage, typeof (List<string>) },
-					{ FMask.FMaskValues.SubLanguage, typeof (List<string>) },
+					{ FMask.FMaskValues.DubLanguage, typeof (IList<string>) },
+					{ FMask.FMaskValues.SubLanguage, typeof (IList<string>) },
 					{ FMask.FMaskValues.Length, typeof (int) },
 					{ FMask.FMaskValues.Description, typeof (string) },
 					{ FMask.FMaskValues.AiredDate, typeof (int) },
@@ -288,7 +288,7 @@ namespace libAniDB.NET
 			set { SetFMaskValue(FMask.FMaskValues.MyListID, value); }
 		}
 
-		public Dictionary<int, byte> OtherEpisodes
+		public IDictionary<int, byte> OtherEpisodes
 		{
 			get { return (Dictionary<int, byte>)GetFMaskValue(FMask.FMaskValues.OtherEpisodes); }
 			set { SetFMaskValue(FMask.FMaskValues.OtherEpisodes, value); }
@@ -361,13 +361,13 @@ namespace libAniDB.NET
 			set { SetFMaskValue(FMask.FMaskValues.Source, value); }
 		}
 
-		public List<string> AudioCodecs
+		public IList<string> AudioCodecs
 		{
 			get { return (List<string>)GetFMaskValue(FMask.FMaskValues.AudioCodecs); }
 			set { SetFMaskValue(FMask.FMaskValues.AudioCodecs, value); }
 		}
 
-		public List<int> AudioBitrates
+		public IList<int> AudioBitrates
 		{
 			get { return (List<int>)GetFMaskValue(FMask.FMaskValues.AudioBitrates); }
 			set { SetFMaskValue(FMask.FMaskValues.AudioBitrates, value); }
@@ -397,13 +397,13 @@ namespace libAniDB.NET
 			set { SetFMaskValue(FMask.FMaskValues.FileExtension, value); }
 		}
 
-		public List<string> DubLanguage
+		public IList<string> DubLanguage
 		{
 			get { return (List<string>)GetFMaskValue(FMask.FMaskValues.DubLanguage); }
 			set { SetFMaskValue(FMask.FMaskValues.DubLanguage, value); }
 		}
 
-		public List<string> SubLanguage
+		public IList<string> SubLanguage
 		{
 			get { return (List<string>)GetFMaskValue(FMask.FMaskValues.SubLanguage); }
 			set { SetFMaskValue(FMask.FMaskValues.SubLanguage, value); }
