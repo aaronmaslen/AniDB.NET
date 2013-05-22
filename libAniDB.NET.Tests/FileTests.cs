@@ -44,7 +44,7 @@ namespace libAniDB.NET.Tests
 			AniDBFile.FMask.Byte3 fByte3 = AniDBFile.FMask.Byte3.Quality | AniDBFile.FMask.Byte3.Source |
 			                               AniDBFile.FMask.Byte3.AudioCodecs | AniDBFile.FMask.Byte3.AudioBitrates |
 			                               AniDBFile.FMask.Byte3.VideoCodec | AniDBFile.FMask.Byte3.VideoBitrate |
-			                               AniDBFile.FMask.Byte3.VideoResolution | AniDBFile.FMask.Byte3.FileType;
+			                               AniDBFile.FMask.Byte3.VideoResolution | AniDBFile.FMask.Byte3.FileExtension;
 
 			AniDBFile.FMask.Byte4 fByte4 = AniDBFile.FMask.Byte4.DubLanguage | AniDBFile.FMask.Byte4.SubLanguage |
 			                               AniDBFile.FMask.Byte4.Length | AniDBFile.FMask.Byte4.Description |

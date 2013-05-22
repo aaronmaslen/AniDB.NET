@@ -31,7 +31,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace libAniDB.NET
 {
@@ -60,8 +60,6 @@ namespace libAniDB.NET
 		public readonly int ClientVer;
 
 		private readonly UdpClient _udpClient;
-		private readonly ManualResetEvent _responseWaitHandle;
-		private bool _recieving;
 
 		public AniDB(int localPort, string clientName = "libanidbdotnet", int clientVer = 1, Encoding encoding = null,
 		             string remoteHostName = "api.anidb.net", int remotePort = 9000)
@@ -77,12 +75,10 @@ namespace libAniDB.NET
 
 			_udpClient = new UdpClient(new IPEndPoint(IPAddress.Any, localPort));
 			_udpClient.Connect(remoteHostName, remotePort);
-			_responseWaitHandle = new ManualResetEvent(false);
-			_recieving = true;
 
 			SessionKey = "";
 
-			new Thread(RecievePackets).Start();
+			RecievePackets();
 
 			//Magical maths that turns the burst length into a number of tokens (in this case, 30)
 			_sendBucket = new TokenBucket<AniDBRequest>(MinSendDelay, AvgSendDelay,
@@ -90,68 +86,79 @@ namespace libAniDB.NET
 														SendPacket);
 		}
 
-		private void QueueCommand(AniDBRequest request)
+		private AniDBRequest QueueCommand(string command, IEnumerable<KeyValuePair<string, string>> parValues)
 		{
+			if (SessionKey != "")
+				parValues = parValues.ToDictionary(p => p.Key, p => p.Value);
+			
+			((Dictionary<string, string>) parValues).Add("s", SessionKey);
+
+			var request = new AniDBRequest(command, parValues);
+
 			if(_sentRequests.ContainsKey(request.Tag))
 				throw new ArgumentException("A request with that tag has already been sent");
 
-			if(SessionKey != "")
-				((Dictionary<string,string>)request.ParValues).Add("s", SessionKey);
-
 			_sendBucket.Input(request);
+
+			return request;
+		}
+		
+		private AniDBRequest QueueCommand(string command, params KeyValuePair<string, string>[] args)
+		{
+			IEnumerable<KeyValuePair<string, string>> parValues = args;
+			return QueueCommand(command, parValues);
 		}
 
 		private void SendPacket(AniDBRequest request)
 		{
-			request.ToByteArray(_encoding);
+			//In theory this should never fail (GUIDs are supposed to be globally unique)
+			if (!_sentRequests.TryAdd(request.Tag, request))
+			{
+				request.OnResponse(null);
+				return;
+			}
 
 			byte[] requestBytes = request.ToByteArray(_encoding);
 
 			_udpClient.Send(requestBytes, requestBytes.Count());
-
 			Debug.Print(requestBytes.ToString());
 
-			if (!_sentRequests.TryAdd(request.Tag, request))
-				request.Callback(null, request);
+			request.Timeout.Elapsed += (o, a) =>
+				                           {
+					                           AniDBRequest r;
+					                           _sentRequests.TryRemove(request.Tag, out r);
+				                           };
+			request.Timeout.Interval = Timeout;
+			request.Timeout.Enabled = true;
 		}
 
-		private void RecievePackets()
+		private async void RecievePackets()
 		{
-			while(_recieving)
+			while(true)
 			{
-				IPEndPoint remoteEP = (IPEndPoint)_udpClient.Client.RemoteEndPoint;
-				remoteEP = new IPEndPoint(remoteEP.Address, remoteEP.Port);
+				try
+				{
+					var result = await _udpClient.ReceiveAsync();
 
-				byte[] responseBytes = null;
+					byte[] responseBytes = result.Buffer;
+					
+					if (responseBytes == null)
+						continue;
 
-				_udpClient.BeginReceive(ar =>
-				                        {
-				                        	responseBytes = _udpClient.EndReceive(ar, ref remoteEP);
-
-											Debug.Print(responseBytes.ToString());
-
-				                        	_responseWaitHandle.Set();
-				                        }, remoteEP);
-
-				_responseWaitHandle.WaitOne();
-
-				if (!_recieving)
+					var response = new AniDBResponse(responseBytes, _encoding);
+					new Task(() => HandleResponse(response)).Start();
+				}
+				catch(ObjectDisposedException ode)
+				{
 					break;
-
-				if(responseBytes == null)
-					continue;
-
-				AniDBResponse response = new AniDBResponse(responseBytes);
-				new Thread(() => HandleResponse(response)).Start();
-
-				_responseWaitHandle.Reset();
+				}
 			}
 		}
 
 		public void HandleResponse(AniDBResponse response)
 		{
 			if (response.Code == AniDBResponse.ReturnCode.LOGIN_ACCEPTED ||
-				response.Code == AniDBResponse.ReturnCode.LOGIN_ACCEPTED_NEW_VER)
+				response.Code == AniDBResponse.ReturnCode.LOGIN_ACCEPTED_NEW_VERSION)
 					SessionKey = response.ReturnString.Split(new [] {' '}, 2)[0];
 
 			if (response.Code == AniDBResponse.ReturnCode.LOGGED_OUT ||
@@ -160,14 +167,16 @@ namespace libAniDB.NET
 					SessionKey = "";
 
 			AniDBRequest request;
-			if(_sentRequests.TryRemove(response.Tag, out request))
-				request.Callback(response, request);
+			if (_sentRequests.TryRemove(response.Tag, out request))
+			{
+				request.Timeout.Stop();
+				request.OnResponse(response);
+			}
 		}
 
 		public void Dispose()
 		{
-			_recieving = false;
-			_responseWaitHandle.Set();
+			_udpClient.Close();
 		}
 	}
 }

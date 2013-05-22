@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace libAniDB.NET
 {
-	public partial class AniDBFile : IAniDBFile
+	public sealed partial class AniDBFile : IAniDBFile
 	{
 		public class FMask
 		{
@@ -179,330 +179,261 @@ namespace libAniDB.NET
 			}
 		}
 
-		protected static readonly ReadOnlyDictionary<FMask.FMaskValues, Type> FMaskTypes =
-			new ReadOnlyDictionary<FMask.FMaskValues, Type>(
-				new Dictionary<FMask.FMaskValues, Type>
+		internal static Dictionary<FMask.FMaskValues, FieldData> FMaskFields =
+			new Dictionary<FMask.FMaskValues, FieldData>
 				{
-					#region FMaskTypes
-					{ FMask.FMaskValues.AID, typeof (int) },
-					{ FMask.FMaskValues.EID, typeof (int) },
-					{ FMask.FMaskValues.GID, typeof (int) },
-					{ FMask.FMaskValues.MyListID, typeof (int) },
-					{ FMask.FMaskValues.OtherEpisodes, typeof (IDictionary<int, byte>) },
-					{ FMask.FMaskValues.IsDeprecated, typeof (bool) },
-					{ FMask.FMaskValues.State, typeof (StateMask) },
-					{ FMask.FMaskValues.Size, typeof (long) },
-					{ FMask.FMaskValues.ED2K, typeof (string) },
-					{ FMask.FMaskValues.MD5, typeof (string) },
-					{ FMask.FMaskValues.SHA1, typeof (string) },
-					{ FMask.FMaskValues.CRC32, typeof (string) },
-					{ FMask.FMaskValues.VideoColorDepth, typeof(string) },
-					{ FMask.FMaskValues.Quality, typeof (string) },
-					{ FMask.FMaskValues.Source, typeof (string) },
-					{ FMask.FMaskValues.AudioCodecs, typeof (IList<string>) },
-					{ FMask.FMaskValues.AudioBitrates, typeof (IList<int>) },
-					{ FMask.FMaskValues.VideoCodec, typeof (string) },
-					{ FMask.FMaskValues.VideoBitrate, typeof (int) },
-					{ FMask.FMaskValues.VideoResolution, typeof (string) },
-					{ FMask.FMaskValues.FileExtension, typeof (string) },
-					{ FMask.FMaskValues.DubLanguage, typeof (IList<string>) },
-					{ FMask.FMaskValues.SubLanguage, typeof (IList<string>) },
-					{ FMask.FMaskValues.Length, typeof (int) },
-					{ FMask.FMaskValues.Description, typeof (string) },
-					{ FMask.FMaskValues.AiredDate, typeof (int) },
-					{ FMask.FMaskValues.AniDBFileName, typeof (string) },
-					{ FMask.FMaskValues.MyListState, typeof (int) },
-					{ FMask.FMaskValues.MyListFileState, typeof (int) },
-					{ FMask.FMaskValues.MyListViewed, typeof (int) },
-					{ FMask.FMaskValues.MyListViewDate, typeof (int) },
-					{ FMask.FMaskValues.MyListStorage, typeof (string) },
-					{ FMask.FMaskValues.MyListSource, typeof (string) },
-					{ FMask.FMaskValues.MyListOther, typeof (string) },
-
-					#endregion
-				});
-
-		public static readonly ReadOnlyDictionary<FMask.FMaskValues, string> FMaskNames =
-			new ReadOnlyDictionary<FMask.FMaskValues, string>(
-				new Dictionary<FMask.FMaskValues, string>
-				{
-					{ FMask.FMaskValues.AID, "AID" },
-					{ FMask.FMaskValues.EID, "EID" },
-					{ FMask.FMaskValues.GID, "GID" },
-					{ FMask.FMaskValues.MyListID, "MyList ID" },
-					{ FMask.FMaskValues.OtherEpisodes, "Other Episodes" },
-					{ FMask.FMaskValues.IsDeprecated, "Deprecated" },
-					{ FMask.FMaskValues.State, "State" },
-					{ FMask.FMaskValues.Size, "Size" },
-					{ FMask.FMaskValues.ED2K, "ED2K Hash" },
-					{ FMask.FMaskValues.MD5, "MD5 Hash" },
-					{ FMask.FMaskValues.SHA1, "SHA1 Hash" },
-					{ FMask.FMaskValues.CRC32, "CRC32 Hash" },
-					{ FMask.FMaskValues.VideoColorDepth, "Video Color Depth"},
-					{ FMask.FMaskValues.Quality, "Quality" },
-					{ FMask.FMaskValues.Source, "Source" },
-					{ FMask.FMaskValues.AudioCodecs, "Audio Codecs" },
-					{ FMask.FMaskValues.AudioBitrates, "Audio Bitrates" },
-					{ FMask.FMaskValues.VideoCodec, "Video Codec" },
-					{ FMask.FMaskValues.VideoBitrate, "Video Bitrate" },
-					{ FMask.FMaskValues.VideoResolution, "Video Resolution" },
-					{ FMask.FMaskValues.FileExtension, "File Extension" },
-					{ FMask.FMaskValues.DubLanguage, "Dub Language(s)" },
-					{ FMask.FMaskValues.SubLanguage, "Sub Language(s)" },
-					{ FMask.FMaskValues.Length, "Length" },
-					{ FMask.FMaskValues.Description, "Description" },
-					{ FMask.FMaskValues.AiredDate, "Aired" },
-					{ FMask.FMaskValues.AniDBFileName, "AniDB File Name" },
-					{ FMask.FMaskValues.MyListState, "MyList State" },
-					{ FMask.FMaskValues.MyListFileState, "MyList File State" },
-					{ FMask.FMaskValues.MyListViewed, "MyList Viewed" },
-					{ FMask.FMaskValues.MyListViewDate, "MyList View Date" },
-					{ FMask.FMaskValues.MyListStorage, "MyList Storage" },
-					{ FMask.FMaskValues.MyListSource, "MyList Source" },
-					{ FMask.FMaskValues.MyListOther, "MyListOther" },
-				});
+					{ FMask.FMaskValues.AID, new FieldData<int>("AID") },
+					{ FMask.FMaskValues.EID, new FieldData<int>("EID") },
+					{ FMask.FMaskValues.GID, new FieldData<int>("GID") },
+					{ FMask.FMaskValues.MyListID, new FieldData<int>("MyList ID") },
+					{ FMask.FMaskValues.OtherEpisodes, new FieldData<IDictionary<int, byte>>("Other Episodes") },
+					{ FMask.FMaskValues.IsDeprecated, new FieldData<bool>("Deprecated") },
+					{ FMask.FMaskValues.State, new FieldData<StateMask>("State") },
+					{ FMask.FMaskValues.Size, new FieldData<long>("Size") },
+					{ FMask.FMaskValues.ED2K, new FieldData<string>("ED2K Hash") },
+					{ FMask.FMaskValues.MD5, new FieldData<string>("MD5 Hash") },
+					{ FMask.FMaskValues.SHA1, new FieldData<string>("SHA1 Hash") },
+					{ FMask.FMaskValues.CRC32, new FieldData<string>("CRC32 Hash") },
+					{ FMask.FMaskValues.VideoColorDepth, new FieldData<string>("Video Color Depth") },
+					{ FMask.FMaskValues.Quality, new FieldData<string>("Quality") },
+					{ FMask.FMaskValues.Source, new FieldData<string>("Source") },
+					{ FMask.FMaskValues.AudioCodecs, new FieldData<IList<string>>("Audio Codecs") },
+					{ FMask.FMaskValues.AudioBitrates, new FieldData<IList<int>>("Audio Bitrates") },
+					{ FMask.FMaskValues.VideoCodec, new FieldData<string>("Video Codec") },
+					{ FMask.FMaskValues.VideoBitrate, new FieldData<int>("Video Bitrate") },
+					{ FMask.FMaskValues.VideoResolution, new FieldData<string>("Video Resolution") },
+					{ FMask.FMaskValues.FileExtension, new FieldData<string>("File Extension") },
+					{ FMask.FMaskValues.DubLanguage, new FieldData<IList<string>>("Dub Language(s)") },
+					{ FMask.FMaskValues.SubLanguage, new FieldData<IList<string>>("Sub Language(s)") },
+					{ FMask.FMaskValues.Length, new FieldData<int>("Length") },
+					{ FMask.FMaskValues.Description, new FieldData<string>("Description") },
+					{ FMask.FMaskValues.AiredDate, new FieldData<int>("Aired") },
+					{ FMask.FMaskValues.AniDBFileName, new FieldData<string>("AniDB File Name") },
+					{ FMask.FMaskValues.MyListState, new FieldData<int>("MyList State") },
+					{ FMask.FMaskValues.MyListFileState, new FieldData<int>("MyList File State") },
+					{ FMask.FMaskValues.MyListViewed, new FieldData<int>("MyList Viewed") },
+					{ FMask.FMaskValues.MyListViewDate, new FieldData<int>("MyList View Date") },
+					{ FMask.FMaskValues.MyListStorage, new FieldData<string>("MyList Storage") },
+					{ FMask.FMaskValues.MyListSource, new FieldData<string>("MyList Source") },
+					{ FMask.FMaskValues.MyListOther, new FieldData<string>("MyListOther") }
+				};
 
 		#region FMask public properties
 
 		public int? AID
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.AID); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.AID); }
 			set { SetFMaskValue(FMask.FMaskValues.AID, value); }
 		}
 
 		public int? EID
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.EID); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.EID); }
 			set { SetFMaskValue(FMask.FMaskValues.EID, value); }
 		}
 
 		public int? GID
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.GID); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.GID); }
 			set { SetFMaskValue(FMask.FMaskValues.GID, value); }
 		}
 
 		public int? MyListID
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.MyListID); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.MyListID); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListID, value); }
 		}
 
 		public IDictionary<int, byte> OtherEpisodes
 		{
-			get { return (Dictionary<int, byte>)GetFMaskValue(FMask.FMaskValues.OtherEpisodes); }
+			get { return GetFMaskValue<Dictionary<int, byte>>(FMask.FMaskValues.OtherEpisodes); }
 			set { SetFMaskValue(FMask.FMaskValues.OtherEpisodes, value); }
 		}
 
-		public bool? IsDeprecated
+		public bool? Deprecated
 		{
-			get { return (bool?)GetFMaskValue(FMask.FMaskValues.IsDeprecated); }
+			get { return GetFMaskValue<bool?>(FMask.FMaskValues.IsDeprecated); }
 			set { SetFMaskValue(FMask.FMaskValues.IsDeprecated, value); }
 		}
 
 		public StateMask? State
 		{
-			get
-			{
-				//WTF: I can't cast to StateMask? if the value is not null for some reason
-				if (GetFMaskValue(FMask.FMaskValues.State) == null)
-					return (StateMask?)GetFMaskValue(FMask.FMaskValues.State);
-
-				return (StateMask)GetFMaskValue(FMask.FMaskValues.State);
-			}
+			get { return GetFMaskValue<StateMask?>(FMask.FMaskValues.State); }
 			set { SetFMaskValue(FMask.FMaskValues.State, value); }
 		}
 
 		public long? Size
 		{
-			get { return (long?)GetFMaskValue(FMask.FMaskValues.Size); }
+			get { return GetFMaskValue<long?>(FMask.FMaskValues.Size); }
 			set { SetFMaskValue(FMask.FMaskValues.Size, value); }
 		}
 
 		public string ED2K
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.ED2K); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.ED2K); }
 			set { SetFMaskValue(FMask.FMaskValues.ED2K, value); }
 		}
 
 		public string MD5
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.MD5); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.MD5); }
 			set { SetFMaskValue(FMask.FMaskValues.MD5, value); }
 		}
 
 		public string SHA1
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.SHA1); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.SHA1); }
 			set { SetFMaskValue(FMask.FMaskValues.SHA1, value); }
 		}
 
 		public string CRC32
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.CRC32); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.CRC32); }
 			set { SetFMaskValue(FMask.FMaskValues.CRC32, value); }
 		}
 
 		public string VideoColorDepth
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.VideoColorDepth); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.VideoColorDepth); }
 			set { SetFMaskValue(FMask.FMaskValues.VideoColorDepth, value); }
 		}
 
 		public string Quality
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.Quality); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.Quality); }
 			set { SetFMaskValue(FMask.FMaskValues.Quality, value); }
 		}
 
 		public string Source
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.Source); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.Source); }
 			set { SetFMaskValue(FMask.FMaskValues.Source, value); }
 		}
 
 		public IList<string> AudioCodecs
 		{
-			get { return (List<string>)GetFMaskValue(FMask.FMaskValues.AudioCodecs); }
+			get { return GetFMaskValue<List<string>>(FMask.FMaskValues.AudioCodecs); }
 			set { SetFMaskValue(FMask.FMaskValues.AudioCodecs, value); }
 		}
 
 		public IList<int> AudioBitrates
 		{
-			get { return (List<int>)GetFMaskValue(FMask.FMaskValues.AudioBitrates); }
+			get { return GetFMaskValue<List<int>>(FMask.FMaskValues.AudioBitrates); }
 			set { SetFMaskValue(FMask.FMaskValues.AudioBitrates, value); }
 		}
 
 		public string VideoCodec
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.VideoCodec); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.VideoCodec); }
 			set { SetFMaskValue(FMask.FMaskValues.VideoCodec, value); }
 		}
 
 		public int? VideoBitrate
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.VideoBitrate); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.VideoBitrate); }
 			set { SetFMaskValue(FMask.FMaskValues.VideoBitrate, value); }
 		}
 
 		public string VideoResolution
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.VideoResolution); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.VideoResolution); }
 			set { SetFMaskValue(FMask.FMaskValues.VideoResolution, value); }
 		}
 
 		public string FileExtension
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.FileExtension); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.FileExtension); }
 			set { SetFMaskValue(FMask.FMaskValues.FileExtension, value); }
 		}
 
 		public IList<string> DubLanguage
 		{
-			get { return (List<string>)GetFMaskValue(FMask.FMaskValues.DubLanguage); }
+			get { return GetFMaskValue <List<string>>(FMask.FMaskValues.DubLanguage); }
 			set { SetFMaskValue(FMask.FMaskValues.DubLanguage, value); }
 		}
 
 		public IList<string> SubLanguage
 		{
-			get { return (List<string>)GetFMaskValue(FMask.FMaskValues.SubLanguage); }
+			get { return GetFMaskValue<List<string>>(FMask.FMaskValues.SubLanguage); }
 			set { SetFMaskValue(FMask.FMaskValues.SubLanguage, value); }
 		}
 
 		public int? Length
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.Length); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.Length); }
 			set { SetFMaskValue(FMask.FMaskValues.Length, value); }
 		}
 
 		public string Description
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.Description); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.Description); }
 			set { SetFMaskValue(FMask.FMaskValues.Description, value); }
 		}
 
-		public int? AiredDate
+		public int? AirDate
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.AiredDate); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.AiredDate); }
 			set { SetFMaskValue(FMask.FMaskValues.AiredDate, value); }
 		}
 
 		public string AniDBFileName
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.AniDBFileName); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.AniDBFileName); }
 			set { SetFMaskValue(FMask.FMaskValues.AniDBFileName, value); }
 		}
 
 		public int? MyListState
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.MyListState); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.MyListState); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListState, value); }
 		}
 
 		public int? MyListFileState
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.MyListFileState); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.MyListFileState); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListFileState, value); }
 		}
 
 		public int? MyListViewed
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.MyListViewed); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.MyListViewed); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListViewed, value); }
 		}
 
 		public int? MyListViewDate
 		{
-			get { return (int?)GetFMaskValue(FMask.FMaskValues.MyListViewDate); }
+			get { return GetFMaskValue<int?>(FMask.FMaskValues.MyListViewDate); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListViewDate, value); }
 		}
 
 		public string MyListStorage
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.MyListStorage); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.MyListStorage); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListStorage, value); }
 		}
 
 		public string MyListSource
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.MyListSource); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.MyListSource); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListSource, value); }
 		}
 
 		public string MyListOther
 		{
-			get { return (string)GetFMaskValue(FMask.FMaskValues.MyListOther); }
+			get { return GetFMaskValue<string>(FMask.FMaskValues.MyListOther); }
 			set { SetFMaskValue(FMask.FMaskValues.MyListOther, value); }
 		}
 
 		#endregion
 
-		protected Dictionary<FMask.FMaskValues, object> FMaskFields;
-
-		protected object GetFMaskValue(FMask.FMaskValues f)
+		internal T GetFMaskValue<T>(FMask.FMaskValues f)
 		{
-			return (FMaskFields.ContainsKey(f) ? FMaskFields[f] : null);
+			return ((FieldData<T>)FMaskFields[f]).Value;
 		}
 
-		protected void SetFMaskValue(FMask.FMaskValues f, object value)
+		internal void SetFMaskValue<T>(FMask.FMaskValues f, T value)
 		{
-			if (value == null ||
-			    (FMaskTypes[f] == typeof (int) && (int)value == -1) ||
-			    (FMaskTypes[f] == typeof (short) && (short)value == -1) ||
-			    (FMaskTypes[f] == typeof (long) && (long)value == -1) ||
-			    (FMaskTypes[f] == typeof (string) && (string)value == "") ||
-			    (FMaskTypes[f] == typeof (StateMask) && (StateMask)value == StateMask.NoneUnset))
-			{
-				if (FMaskFields.ContainsKey(f))
-					FMaskFields.Remove(f);
-
-				return;
-			}
-
-			if (FMaskFields.ContainsKey(f))
-				FMaskFields[f] = value;
-			else
-				FMaskFields.Add(f, value);
+			((FieldData<T>) FMaskFields[f]).Value = value;
 		}
 	}
 }

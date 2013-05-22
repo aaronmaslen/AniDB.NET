@@ -23,9 +23,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
 using CSharpVitamins;
 
 namespace libAniDB.NET
@@ -34,27 +37,61 @@ namespace libAniDB.NET
 	{
 		public readonly string Command;
 		public readonly IEnumerable<KeyValuePair<string, string>> ParValues;
-		public readonly AniDBResponseCallback Callback;
 		public readonly string Tag;
 
-		public AniDBRequest(string command, AniDBResponseCallback callback = null,
+		internal protected event Action<AniDBResponse> ResponseHandler;
+		private AniDBResponse _response;
+		internal protected void OnResponse(AniDBResponse response)
+		{
+			var handler = ResponseHandler;
+			if (handler != null) handler(response);
+		}
+
+		internal readonly Timer Timeout;
+
+		internal AniDBRequest(string command, Action<AniDBResponse> callback,
 		                    params KeyValuePair<string, string>[] args)
 			: this(command, callback, args.ToDictionary(a => a.Key, a => a.Value)) {}
 
-		public AniDBRequest(string command, AniDBResponseCallback callback,
+		internal AniDBRequest(string command, Action<AniDBResponse> callback,
 		                    IEnumerable<KeyValuePair<string, string>> parValues)
+			: this(command, parValues)
+		{
+			ResponseHandler += callback;
+		}
+
+		public AniDBRequest(string command, IEnumerable<KeyValuePair<string, string>> parValues)
 		{
 			Command = command;
-			Callback = callback;
-
 			Tag = ShortGuid.NewGuid().ToString();
+			ParValues = parValues.ToDictionary(p => p.Key, p => p.Value);
 
-			ParValues = parValues;
+			ResponseHandler += r => _response = r;
+
+			Timeout = new Timer
+								{
+									Enabled = false,
+									AutoReset = false
+								};
 		}
+
+        public Task<AniDBResponse> Response
+        {
+			get
+			{
+				var tcs = new TaskCompletionSource<AniDBResponse>();
+
+				Timeout.Elapsed += (e, a) => tcs.SetException(new TimeoutException("Timeout at " + a.SignalTime));
+				
+				if (_response != null) tcs.SetResult(_response);
+				else ResponseHandler += tcs.SetResult;
+				return tcs.Task;
+			}
+        }
 
 		public override string ToString()
 		{
-			StringBuilder returnString = new StringBuilder(Command + " ");
+			var returnString = new StringBuilder(Command + " ");
 
 			foreach (var s in ParValues)
 				returnString.AppendFormat("{0}={1}&", s.Key, s.Value);

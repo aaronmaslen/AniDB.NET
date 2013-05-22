@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace libAniDB.NET
 {
-	public partial class AniDBFile : IAniDBFile
+	public sealed partial class AniDBFile : IAniDBFile
 	{
 		public class AMask
 		{
@@ -40,7 +40,7 @@ namespace libAniDB.NET
 				Year = 32,
 				Type = 16,
 				RelatedAIDList = 8,
-				RelatedAIDType = 4,
+				RelatedAIDTypeList = 4,
 				CategoryList = 2,
 				None = 0
 			}
@@ -81,31 +81,31 @@ namespace libAniDB.NET
 			[Flags]
 			public enum AMaskValues : uint
 			{
-				TotalEpisodes = (uint)Byte1.TotalEpisodes << 8 * 3,
-				HighestEpisodeNumber = (uint)Byte1.HighestEpisodeNumber << 8 * 3,
-				Year = (uint)Byte1.Year << 8 * 3,
-				Type = (uint)Byte1.Type << 8 * 3,
-				RelatedAIDList = (uint)Byte1.RelatedAIDList << 8 * 3,
-				RelatedAIDType = (uint)Byte1.RelatedAIDType << 8 * 3,
-				CategoryList = (uint)Byte1.CategoryList << 8 * 3,
+				TotalEpisodes = (uint) Byte1.TotalEpisodes << 8*3,
+				HighestEpisodeNumber = (uint) Byte1.HighestEpisodeNumber << 8*3,
+				Year = (uint) Byte1.Year << 8*3,
+				Type = (uint) Byte1.Type << 8*3,
+				RelatedAIDList = (uint) Byte1.RelatedAIDList << 8*3,
+				RelatedAIDTypeList = (uint) Byte1.RelatedAIDTypeList << 8*3,
+				CategoryList = (uint) Byte1.CategoryList << 8*3,
 
-				RomanjiName = (uint)Byte2.RomanjiName << 8 * 2,
-				KanjiName = (uint)Byte2.KanjiName << 8 * 2,
-				EnglishName = (uint)Byte2.EnglishName << 8 * 2,
-				OtherName = (uint)Byte2.OtherName << 8 * 2,
-				ShortNameList = (uint)Byte2.ShortNameList << 8 * 2,
-				SynonymList = (uint)Byte2.SynonymList << 8 * 2,
+				RomanjiName = (uint) Byte2.RomanjiName << 8*2,
+				KanjiName = (uint) Byte2.KanjiName << 8*2,
+				EnglishName = (uint) Byte2.EnglishName << 8*2,
+				OtherName = (uint) Byte2.OtherName << 8*2,
+				ShortNameList = (uint) Byte2.ShortNameList << 8*2,
+				SynonymList = (uint) Byte2.SynonymList << 8*2,
 
-				EpNo = (uint)Byte3.EpNo << 8 * 1,
-				EpName = (uint)Byte3.EpName << 8 * 1,
-				EpRomanjiName = (uint)Byte3.EpRomanjiName << 8 * 1,
-				EpKanjiName = (uint)Byte3.EpKanjiName << 8 * 1,
-				EpisodeRating = (uint)Byte3.EpisodeRating << 8 * 1,
-				EpisodeVoteCount = (uint)Byte3.EpisodeVoteCount << 8 * 1,
+				EpNo = (uint) Byte3.EpNo << 8*1,
+				EpName = (uint) Byte3.EpName << 8*1,
+				EpRomanjiName = (uint) Byte3.EpRomanjiName << 8*1,
+				EpKanjiName = (uint) Byte3.EpKanjiName << 8*1,
+				EpisodeRating = (uint) Byte3.EpisodeRating << 8*1,
+				EpisodeVoteCount = (uint) Byte3.EpisodeVoteCount << 8*1,
 
-				GroupName = (uint)Byte4.GroupName << 8 * 0,
-				GroupShortName = (uint)Byte4.GroupShortName << 8 * 0,
-				DateAIDRecordUpdated = (uint)Byte4.DateAIDRecordUpdated << 8 * 0,
+				GroupName = (uint) Byte4.GroupName << 8*0,
+				GroupShortName = (uint) Byte4.GroupShortName << 8*0,
+				DateAIDRecordUpdated = (uint) Byte4.DateAIDRecordUpdated << 8*0,
 				None = 0
 			}
 
@@ -119,10 +119,10 @@ namespace libAniDB.NET
 			public AMask(Byte1 byte1 = Byte1.None, Byte2 byte2 = Byte2.None, Byte3 byte3 = Byte3.None,
 			             Byte4 byte4 = Byte4.None)
 			{
-				Mask = (AMaskValues)(((int)byte1 << 8 * 3) |
-				                     ((int)byte2 << 8 * 2) |
-				                     ((int)byte3 << 8 * 1) |
-				                     ((int)byte4));
+				Mask = (AMaskValues) (((int) byte1 << 8*3) |
+				                      ((int) byte2 << 8*2) |
+				                      ((int) byte3 << 8*1) |
+				                      ((int) byte4));
 			}
 
 			public AMask(AMaskValues aMaskValues)
@@ -136,223 +136,177 @@ namespace libAniDB.NET
 			}
 		}
 
-		protected static readonly ReadOnlyDictionary<AMask.AMaskValues, Type> AMaskTypes =
-			new ReadOnlyDictionary<AMask.AMaskValues, Type>(
-				new Dictionary<AMask.AMaskValues, Type>
+		internal readonly Dictionary<AMask.AMaskValues, FieldData> AMaskFields =
+			new Dictionary<AMask.AMaskValues, FieldData>
 				{
-					#region AMaskTypes
-					{ AMask.AMaskValues.TotalEpisodes, typeof (int) },
-					{ AMask.AMaskValues.HighestEpisodeNumber, typeof (int) },
-					{ AMask.AMaskValues.Year, typeof (string) },
-					{ AMask.AMaskValues.Type, typeof (string) },
-					{ AMask.AMaskValues.RelatedAIDList, typeof (IList<string>) },
-					{ AMask.AMaskValues.RelatedAIDType, typeof (IList<string>) },
-					{ AMask.AMaskValues.CategoryList, typeof (IList<string>) },
-					{ AMask.AMaskValues.RomanjiName, typeof (string) },
-					{ AMask.AMaskValues.KanjiName, typeof (string) },
-					{ AMask.AMaskValues.EnglishName, typeof (string) },
-					{ AMask.AMaskValues.OtherName, typeof (IList<string>) },
-					{ AMask.AMaskValues.ShortNameList, typeof (IList<string>) },
-					{ AMask.AMaskValues.SynonymList, typeof (IList<string>) },
-					{ AMask.AMaskValues.EpNo, typeof (string) },
-					{ AMask.AMaskValues.EpName, typeof (string) },
-					{ AMask.AMaskValues.EpRomanjiName, typeof (string) },
-					{ AMask.AMaskValues.EpKanjiName, typeof (string) },
-					{ AMask.AMaskValues.EpisodeRating, typeof (int) },
-					{ AMask.AMaskValues.EpisodeVoteCount, typeof (int) },
-					{ AMask.AMaskValues.GroupName, typeof (string) },
-					{ AMask.AMaskValues.GroupShortName, typeof (string) },
-					{ AMask.AMaskValues.DateAIDRecordUpdated, typeof (int) }
-					#endregion
-				});
-
-		public static readonly ReadOnlyDictionary<AMask.AMaskValues, string> AMaskNames =
-			new ReadOnlyDictionary<AMask.AMaskValues, string>(
-				new Dictionary<AMask.AMaskValues, string>
-				{
-					{ AMask.AMaskValues.TotalEpisodes, "Total Episodes" },
-					{ AMask.AMaskValues.HighestEpisodeNumber, "Highest Episode Number" },
-					{ AMask.AMaskValues.Year, "Year" },
-					{ AMask.AMaskValues.Type, "Type" },
-					{ AMask.AMaskValues.RelatedAIDList, "Related AIDs" },
-					{ AMask.AMaskValues.RelatedAIDType, "Related AID Types" },
-					{ AMask.AMaskValues.CategoryList, "Categories" },
-					{ AMask.AMaskValues.RomanjiName, "Romanji Name" },
-					{ AMask.AMaskValues.KanjiName, "Kanji Name" },
-					{ AMask.AMaskValues.EnglishName, "English Name" },
-					{ AMask.AMaskValues.OtherName, "Other Name" },
-					{ AMask.AMaskValues.ShortNameList, "Short Name List" },
-					{ AMask.AMaskValues.SynonymList, "Synonym List" },
-					{ AMask.AMaskValues.EpNo, "Episode No." },
-					{ AMask.AMaskValues.EpName, "Episode Name" },
-					{ AMask.AMaskValues.EpRomanjiName, "Episode Romanji Name" },
-					{ AMask.AMaskValues.EpKanjiName, "Episode Kanji Name" },
-					{ AMask.AMaskValues.EpisodeRating, "Episode Rating" },
-					{ AMask.AMaskValues.EpisodeVoteCount, "Episode Vote Count" },
-					{ AMask.AMaskValues.GroupName, "Group Name" },
-					{ AMask.AMaskValues.GroupShortName, "Group Short Name" },
-					{ AMask.AMaskValues.DateAIDRecordUpdated, "AID Record Updated" }
-				});
+					{AMask.AMaskValues.TotalEpisodes, new FieldData<int?>("Total Episodes")},
+					{AMask.AMaskValues.HighestEpisodeNumber, new FieldData<int?>("Highest Episode Number")},
+					{AMask.AMaskValues.Year, new FieldData<string>("Year")},
+					{AMask.AMaskValues.Type, new FieldData<string>("Type")},
+					{AMask.AMaskValues.RelatedAIDList, new FieldData<IList<int?>>("Related AIDs")},
+					{AMask.AMaskValues.RelatedAIDTypeList, new FieldData<IList<Anime.AIDRelationType>>("Related AID Types")},
+					{AMask.AMaskValues.CategoryList, new FieldData<IList<string>>("Categories")},
+					{AMask.AMaskValues.RomanjiName, new FieldData<string>("Romanji Name")},
+					{AMask.AMaskValues.KanjiName, new FieldData<string>("Kanji Name")},
+					{AMask.AMaskValues.EnglishName, new FieldData<string>("English Name")},
+					{AMask.AMaskValues.OtherName, new FieldData<IList<string>>("Other Names")},
+					{AMask.AMaskValues.ShortNameList, new FieldData<IList<string>>("Short Names")},
+					{AMask.AMaskValues.SynonymList, new FieldData<IList<string>>("Synonyms")},
+					{AMask.AMaskValues.EpNo, new FieldData<string>("Episode No.")},
+					{AMask.AMaskValues.EpName, new FieldData<string>("Episode Name")},
+					{AMask.AMaskValues.EpRomanjiName, new FieldData<string>("Romanji Name")},
+					{AMask.AMaskValues.EpKanjiName, new FieldData<string>("Kanji Name")},
+					{AMask.AMaskValues.EpisodeRating, new FieldData<int?>("Episode Rating")},
+					{AMask.AMaskValues.EpisodeVoteCount, new FieldData<int?>("Episode Vote Count")},
+					{AMask.AMaskValues.GroupName, new FieldData<string>("Group Name")},
+					{AMask.AMaskValues.GroupShortName, new FieldData<string>("Group Short Name")},
+					{AMask.AMaskValues.DateAIDRecordUpdated, new FieldData<int?>("Date AID Record Updated")}
+				};
 
 		#region AMask public properties
 
-		public int? TotalEpisodes
+		public int? Episodes
 		{
-			get { return (int?)GetAMaskValue(AMask.AMaskValues.TotalEpisodes); }
+			get { return GetAMaskValue<int?>(AMask.AMaskValues.TotalEpisodes); }
 			set { SetAMaskValue(AMask.AMaskValues.TotalEpisodes, value); }
 		}
 
 		public int? HighestEpisodeNumber
 		{
-			get { return (int?)GetAMaskValue(AMask.AMaskValues.HighestEpisodeNumber); }
+			get { return GetAMaskValue<int?>(AMask.AMaskValues.HighestEpisodeNumber); }
 			set { SetAMaskValue(AMask.AMaskValues.HighestEpisodeNumber, value); }
 		}
 
 		public string Year
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.Year); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.Year); }
 			set { SetAMaskValue(AMask.AMaskValues.Year, value); }
 		}
 
 		public string Type
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.Type); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.Type); }
 			set { SetAMaskValue(AMask.AMaskValues.Type, value); }
 		}
 
-		public IList<string> RelatedAIDList
+		public IList<int> RelatedAIDList
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDList); }
+			get { return GetAMaskValue<List<int>>(AMask.AMaskValues.RelatedAIDList); }
 			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDList, value); }
 		}
 
-		public IList<string> RelatedAIDType
+		public IList<Anime.AIDRelationType> RelatedAIDTypeList
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDType); }
-			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDType, value); }
+			get { return GetAMaskValue<List<Anime.AIDRelationType>>(AMask.AMaskValues.RelatedAIDTypeList); }
+			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDTypeList, value); }
 		}
 
 		public IList<string> CategoryList
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.CategoryList); }
+			get { return GetAMaskValue<List<string>>(AMask.AMaskValues.CategoryList); }
 			set { SetAMaskValue(AMask.AMaskValues.CategoryList, value); }
 		}
 
 		public string RomanjiName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.RomanjiName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.RomanjiName); }
 			set { SetAMaskValue(AMask.AMaskValues.RomanjiName, value); }
 		}
 
 		public string KanjiName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.KanjiName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.KanjiName); }
 			set { SetAMaskValue(AMask.AMaskValues.KanjiName, value); }
 		}
 
 		public string EnglishName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.EnglishName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.EnglishName); }
 			set { SetAMaskValue(AMask.AMaskValues.EnglishName, value); }
 		}
 
 		public IList<string> OtherName
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.OtherName); }
+			get { return GetAMaskValue<List<string>>(AMask.AMaskValues.OtherName); }
 			set { SetAMaskValue(AMask.AMaskValues.OtherName, value); }
 		}
 
 		public IList<string> ShortNameList
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.ShortNameList); }
+			get { return GetAMaskValue<List<string>>(AMask.AMaskValues.ShortNameList); }
 			set { SetAMaskValue(AMask.AMaskValues.ShortNameList, value); }
 		}
 
 		public IList<string> SynonymList
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.SynonymList); }
+			get { return GetAMaskValue<List<string>>(AMask.AMaskValues.SynonymList); }
 			set { SetAMaskValue(AMask.AMaskValues.SynonymList, value); }
 		}
 
-		public string EpNo
+		public string EpisodeNumber
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.EpNo); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.EpNo); }
 			set { SetAMaskValue(AMask.AMaskValues.EpNo, value); }
 		}
 
-		public string EpName
+		public string EpisodeName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.EpName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.EpName); }
 			set { SetAMaskValue(AMask.AMaskValues.EpName, value); }
 		}
 
-		public string EpRomanjiName
+		public string EpisodeRomanjiName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.EpRomanjiName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.EpRomanjiName); }
 			set { SetAMaskValue(AMask.AMaskValues.EpRomanjiName, value); }
 		}
 
-		public string EpKanjiName
+		public string EpisodeKanjiName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.EpKanjiName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.EpKanjiName); }
 			set { SetAMaskValue(AMask.AMaskValues.EpKanjiName, value); }
 		}
 
 		public int? EpisodeRating
 		{
-			get { return (int?)GetAMaskValue(AMask.AMaskValues.EpisodeRating); }
+			get { return GetAMaskValue<int?>(AMask.AMaskValues.EpisodeRating); }
 			set { SetAMaskValue(AMask.AMaskValues.EpisodeRating, value); }
 		}
 
 		public int? EpisodeVoteCount
 		{
-			get { return (int?)GetAMaskValue(AMask.AMaskValues.EpisodeVoteCount); }
+			get { return GetAMaskValue<int?>(AMask.AMaskValues.EpisodeVoteCount); }
 			set { SetAMaskValue(AMask.AMaskValues.EpisodeVoteCount, value); }
 		}
 
 		public string GroupName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.GroupName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.GroupName); }
 			set { SetAMaskValue(AMask.AMaskValues.GroupName, value); }
 		}
 
 		public string GroupShortName
 		{
-			get { return (string)GetAMaskValue(AMask.AMaskValues.GroupShortName); }
+			get { return GetAMaskValue<string>(AMask.AMaskValues.GroupShortName); }
 			set { SetAMaskValue(AMask.AMaskValues.GroupShortName, value); }
 		}
 
 		public int? DateAIDRecordUpdated
 		{
-			get { return (int?)GetAMaskValue(AMask.AMaskValues.DateAIDRecordUpdated); }
+			get { return GetAMaskValue<int?>(AMask.AMaskValues.DateAIDRecordUpdated); }
 			set { SetAMaskValue(AMask.AMaskValues.DateAIDRecordUpdated, value); }
 		}
 
 		#endregion
 
-		protected Dictionary<AMask.AMaskValues, object> AMaskFields;
-
-		protected object GetAMaskValue(AMask.AMaskValues a)
+		internal T GetAMaskValue<T>(AMask.AMaskValues a)
 		{
-			return (AMaskFields.ContainsKey(a) ? AMaskFields[a] : null);
+			return ((FieldData<T>) AMaskFields[a]).Value;
 		}
 
-		protected void SetAMaskValue(AMask.AMaskValues a, object value)
+		internal void SetAMaskValue<T>(AMask.AMaskValues a, T value)
 		{
-			if (value == null ||
-			    (AMaskTypes[a] == typeof (int) && (int)value == -1) ||
-			    (AMaskTypes[a] == typeof (string) && (string)value == ""))
-			{
-				if (AMaskFields.ContainsKey(a))
-					AMaskFields.Remove(a);
-
-				return;
-			}
-
-			if (AMaskFields.ContainsKey(a))
-				AMaskFields[a] = value;
-			else
-				AMaskFields.Add(a, value);
+			((FieldData<T>) AMaskFields[a]).Value = value;
 		}
 	}
 }

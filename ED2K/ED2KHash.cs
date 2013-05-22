@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
@@ -32,6 +33,116 @@ using System.Threading.Tasks;
 
 namespace ED2K
 {
+	public class ED2KHashTask
+	{
+		public const uint ChunkSize = 9728000;
+
+		private readonly string _filePath;
+
+		public ED2KHashTask(string filePath)
+		{
+			_filePath = filePath;
+		}
+
+		public ED2KHashTask(string filePath, int maxSimultaneousChunks) : this(filePath)
+		{
+			MaxSimultaneousChunks = maxSimultaneousChunks;
+		}
+
+		public uint ChunkCount
+		{
+			get
+			{
+				return (uint)((new FileInfo(_filePath)).Length / ChunkSize + 1);
+			}
+		}
+
+		public uint ReadChunks { get; private set; }
+		public uint CompletedChunks { get; private set; }
+
+		public int MaxSimultaneousChunks { get; private set; }
+
+		private class Chunk : IDisposable
+		{
+			public Chunk(byte[] data, bool last)
+			{
+				_data = data;
+				Last = last;
+			}
+
+			public readonly bool Last;
+			private byte[] _data;
+
+			public MD4Digest Digest()
+			{
+				return MD4Context.GetDigest(_data);
+			}
+
+			#region Implementation of IDisposable
+
+			public void Dispose()
+			{
+				_data = null;
+			}
+
+			#endregion
+		}
+
+		private string _hashString;
+
+		public async Task<string> GetED2KHash()
+		{
+			if (_hashString != null)
+				return _hashString;
+			
+			var queue = MaxSimultaneousChunks <= 0
+					        ? new BlockingCollection<Task<Tuple<MD4Digest, bool>>>(
+						            new ConcurrentQueue<Task<Tuple<MD4Digest, bool>>>())
+					        : new BlockingCollection<Task<Tuple<MD4Digest, bool>>>(
+						            new ConcurrentQueue<Task<Tuple<MD4Digest, bool>>>(), MaxSimultaneousChunks);
+
+			Task.Run(() =>
+			{
+				var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read);
+				for (uint i = 0; i < ChunkCount; i++)
+				{
+					byte[] data = new byte[fs.Length - fs.Position > ChunkSize
+							                    ? ChunkSize
+							                    : fs.Length - fs.Position];
+					fs.Read(data, 0, data.Length);
+					var last = fs.Position == fs.Length;
+					var index = i;
+					Debug.Print("=>" + index);
+					queue.Add(Task.Run(() =>
+					{
+						Debug.Print("<=" + index);
+						using (var chunk = new Chunk(data, last))
+							return Tuple.Create(chunk.Digest(), chunk.Last);
+					}));
+
+					ReadChunks = i + 1;
+				}
+			});
+			
+			uint completedChunks = 0;
+			MD4Context md4Context = new MD4Context();
+			Task<Tuple<MD4Digest, bool>> currentChunk;
+			do
+			{
+				currentChunk = queue.Take();
+
+				var chunkHash = (await currentChunk).Item1.ToArray();
+				md4Context.Update(chunkHash, 0, chunkHash.Length);
+				completedChunks++;
+				CompletedChunks = completedChunks;
+			} while (!currentChunk.Result.Item2); //While not last
+
+			_hashString = md4Context.GetDigest().ToString();
+			return _hashString;
+		}
+	}
+
+	[Obsolete("Appears broken on large files, and the Task version seems to be just as fast")]
 	public class ED2KHash
 	{
 		private class Chunk

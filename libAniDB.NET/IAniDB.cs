@@ -40,7 +40,6 @@ namespace libAniDB.NET
 		/// </summary>
 		/// <param name="user">User name</param>
 		/// <param name="pass">Password</param>
-		/// <param name="callback">Response callback</param>
 		/// <param name="nat">Returns the detected</param>
 		/// <param name="comp">Enable compression</param>
 		/// <param name="mtu">Maximum Transmission Unit size of responses (in bytes). Valid values are in the range 400-1400</param>
@@ -65,61 +64,54 @@ namespace libAniDB.NET
 		///   {str image server name}</description></item>
 		/// </list>
 		/// </remarks>
-		void Auth(string user, string pass, AniDBResponseCallback callback, bool nat = false, bool comp = false,
+		AniDBRequest Auth(string user, string pass, bool nat = false, bool comp = false,
 				  int mtu = 0, bool imgServer = false);
 
 		/// <summary>
 		/// Logs out, must be logged in
 		/// </summary>
-		/// <param name="callback">Response callback</param>
-		void Logout(AniDBResponseCallback callback);
+		AniDBRequest Logout();
 
 		/// <summary>
 		/// Not Yet Implemented
 		/// </summary>
 		/// <param name="user">Use this user's API key to encrypt the session</param>
-		/// <param name="callback">Response callback</param>
-		void Encrypt(string user, AniDBResponseCallback callback);
+		AniDBRequest Encrypt(string user);
 
 		/// <summary>
 		/// Ping Command. Can be used to detect whether the outgoing port number has been changed by a NAT router (set nat to true) 
 		/// or to keep a "connection" alive.
 		/// </summary>
-		/// <param name="callback">Response callback</param>
 		/// <param name="nat">If true(default), returns the outgoing port number.</param>
-		void Ping(AniDBResponseCallback callback, bool nat = false);
+		AniDBRequest Ping(bool nat = false);
 
 		/// <summary>
 		/// Changes the encoding method.
 		/// </summary>
 		/// <param name="name"></param>
-		/// <param name="callback"></param>
-		void ChangeEncoding(string name, AniDBResponseCallback callback);
+		AniDBRequest ChangeEncoding(string name);
 
-		void Uptime(AniDBResponseCallback callback);
-		void Version(AniDBResponseCallback callback);
-		void Anime(int aID, AniDBResponseCallback callback, Anime.AMask aMask = null);
-		void Anime(string aName, AniDBResponseCallback callback, Anime.AMask aMask = null);
-		void AnimeDesc(int aID, int partNo, AniDBResponseCallback callback);
-		void Calendar(AniDBResponseCallback callback);
-		void Character(int charID, AniDBResponseCallback callback);
-		void Creator(int creatorID, AniDBResponseCallback callback);
-		void Episode(int eID, AniDBResponseCallback callback);
-		void Episode(string aName, int epNo, AniDBResponseCallback callback);
-		void Episode(int aID, int epNo, AniDBResponseCallback callback);
+		AniDBRequest Uptime();
+		AniDBRequest Version();
+		AniDBRequest Anime(int aID, Anime.AMask aMask = null);
+		AniDBRequest Anime(string aName, Anime.AMask aMask = null);
+		AniDBRequest AnimeDesc(int aID, int partNo);
+		AniDBRequest Calendar();
+		AniDBRequest Character(int charID);
+		AniDBRequest Creator(int creatorID);
+		AniDBRequest Episode(int eID);
+		AniDBRequest Episode(string aName, int epNo);
+		AniDBRequest Episode(int aID, int epNo);
 
-		void File(int fID, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback);
-		void File(long size, string ed2K, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback);
-		void File(string aName, string gName, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask, 
-				  AniDBResponseCallback callback);
-		void File(string aName, int gID, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback);
-		void File(int aID, string gName, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback);
-		void File(int aID, int gID, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask, AniDBResponseCallback callback);
+		AniDBRequest File(int fID, AniDBFile.FMask fMask, AniDBFile.AMask aMask);
+		AniDBRequest File(long size, string ed2K, AniDBFile.FMask fMask, AniDBFile.AMask aMask);
+		AniDBRequest File(string aName, string gName, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask);
+		AniDBRequest File(string aName, int gID, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask);
+		AniDBRequest File(int aID, string gName, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask);
+		AniDBRequest File(int aID, int gID, int epNo, AniDBFile.FMask fMask, AniDBFile.AMask aMask);
 
-		void Group(int gID, AniDBResponseCallback callback);
-		void Group(string gName, AniDBResponseCallback callback);
-		void GroupStatus(int aID, AniDBResponseCallback callback, int state = 0);
+		AniDBRequest Group(int gID);
+		AniDBRequest Group(string gName);
+		AniDBRequest GroupStatus(int aID, int state = 0);
 	}
-
-	public delegate void AniDBResponseCallback(AniDBResponse response, AniDBRequest request);
 }

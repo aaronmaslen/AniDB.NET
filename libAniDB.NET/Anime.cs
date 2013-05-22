@@ -25,12 +25,44 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using libAniDB.NET;
 
 namespace libAniDB.NET
 {
-	public class Anime : IAnime
+	public interface IAnime
+	{
+		int? AID { get; set; }
+		Anime.DateFlag? DateFlags { get; set; }
+		string Year { get; set; }
+		string Type { get; set; }
+		IList<int> RelatedAIDList { get; set; }
+		IList<Anime.AIDRelationType> RelatedAIDTypeList { get; set; }
+		IList<string> CategoryList { get; set; }
+		IList<string> CategoryWeightList { get; set; }
+		string RomanjiName { get; set; }
+		string KanjiName { get; set; }
+		string EnglishName { get; set; }
+		IList<string> OtherName { get; set; }
+		IList<string> ShortNameList { get; set; }
+		IList<string> SynonymList { get; set; }
+		int? Episodes { get; set; }
+		int? HighestEpisodeNumber { get; set; }
+		int? SpecialEpisodeCount { get; set; }
+		int? AirDate { get; set; }
+		int? EndDate { get; set; }
+		string Url { get; set; }
+		string PicName { get; set; }
+		IList<string> CategoryIdList { get; set; }
+		int? Rating { get; set; }
+		int? VoteCount { get; set; }
+		int? TempRating { get; set; }
+		int? TempVoteCount { get; set; }
+		int? AverageReviewRating { get; set; }
+		int? ReviewCount { get; set; }
+		IList<string> AwardList { get; set; }
+		bool? IsR18Restricted { get; set; }
+	}
+
+	public sealed class Anime : IAnime
 	{
 		[Flags]
 		public enum DateFlag
@@ -55,7 +87,7 @@ namespace libAniDB.NET
 				Year = 32,
 				Type = 16,
 				RelatedAIDList = 8,
-				RelatedAIDType = 4,
+				RelatedAIDTypeList = 4,
 				CategoryList = 2,
 				CategoryWeightList = 1,
 				None = 0,
@@ -141,7 +173,7 @@ namespace libAniDB.NET
 				Year = (ulong)Byte1.Year << 8 * 6,
 				Type = (ulong)Byte1.Type << 8 * 6,
 				RelatedAIDList = (ulong)Byte1.RelatedAIDList << 8 * 6,
-				RelatedAIDType = (ulong)Byte1.RelatedAIDType << 8 * 6,
+				RelatedAIDTypeList = (ulong)Byte1.RelatedAIDTypeList << 8 * 6,
 				CategoryList = (ulong)Byte1.CategoryList << 8 * 6,
 				CategoryWeightList = (ulong)Byte1.CategoryWeightList << 8 * 6,
 
@@ -217,7 +249,7 @@ namespace libAniDB.NET
 			}
 		}
 
-		public enum AIDType
+		public enum AIDRelationType
 		{
 			Sequel = 1,
 			Prequel = 2,
@@ -233,113 +265,54 @@ namespace libAniDB.NET
 			Other = 11,
 		}
 
-		protected static readonly ReadOnlyDictionary<AMask.AMaskValues, Type> AMaskTypes =
-			new ReadOnlyDictionary<AMask.AMaskValues, Type>(
-				new Dictionary<AMask.AMaskValues, Type>
+		private static readonly Dictionary<AMask.AMaskValues, FieldData> AMaskDefs =
+			new Dictionary<AMask.AMaskValues, FieldData>
 				{
-					#region AMaskTypes
-					{ AMask.AMaskValues.AID, typeof (int) },
-					{ AMask.AMaskValues.DateFlags, typeof(DateFlag) },
-					{ AMask.AMaskValues.Year, typeof (string) },
-					{ AMask.AMaskValues.Type, typeof (string) },
-					{ AMask.AMaskValues.RelatedAIDList, typeof (List<string>) },
-					{ AMask.AMaskValues.RelatedAIDType, typeof (List<AIDType>) },
-					{ AMask.AMaskValues.CategoryList, typeof (List<string>) },
-					{ AMask.AMaskValues.CategoryWeightList, typeof (List<string>) },
-					{ AMask.AMaskValues.RomanjiName, typeof (string) },
-					{ AMask.AMaskValues.KanjiName, typeof (string) },
-					{ AMask.AMaskValues.EnglishName, typeof (string) },
-					{ AMask.AMaskValues.OtherName, typeof (List<string>) },
-					{ AMask.AMaskValues.ShortNameList, typeof (List<string>) },
-					{ AMask.AMaskValues.SynonymList, typeof (List<string>) },
-					{ AMask.AMaskValues.Episodes, typeof (int) },
-					{ AMask.AMaskValues.HighestEpisodeNumber, typeof (int) },
-					{ AMask.AMaskValues.SpecialEpisodeCount, typeof (int) },
-					{ AMask.AMaskValues.AirDate, typeof (int) },
-					{ AMask.AMaskValues.EndDate, typeof (int) },
-					{ AMask.AMaskValues.Url, typeof (string) },
-					{ AMask.AMaskValues.PicName, typeof (string) },
-					{ AMask.AMaskValues.CategoryIdList, typeof (List<string>) },
-					{ AMask.AMaskValues.Rating, typeof (int) },
-					{ AMask.AMaskValues.VoteCount, typeof (int) },
-					{ AMask.AMaskValues.TempRating, typeof (int) },
-					{ AMask.AMaskValues.TempVoteCount, typeof (int) },
-					{ AMask.AMaskValues.AverageReviewRating, typeof (int) },
-					{ AMask.AMaskValues.ReviewCount, typeof (int) },
-					{ AMask.AMaskValues.AwardList, typeof (List<string>) },
-					{ AMask.AMaskValues.IsR18Restricted, typeof (bool) },
-					{ AMask.AMaskValues.AnimePlanetId, typeof (int) },
-					{ AMask.AMaskValues.AnnId, typeof (int) },
-					{ AMask.AMaskValues.AllCinemaId, typeof (int) },
-					{ AMask.AMaskValues.AnimeNfoId, typeof (string) },
-					{ AMask.AMaskValues.DateRecordUpdated, typeof (int) },
-					{ AMask.AMaskValues.CharacterIdList, typeof (List<int>) },
-					{ AMask.AMaskValues.CreatorIdList, typeof (List<int>) },
-					{ AMask.AMaskValues.MainCreatorIdList, typeof (List<int>) },
-					{ AMask.AMaskValues.MainCreatorNameList, typeof (List<string>) },
-					{ AMask.AMaskValues.SpecialsCount, typeof (int) },
-					{ AMask.AMaskValues.CreditsCount, typeof (int) },
-					{ AMask.AMaskValues.OtherCount, typeof (int) },
-					{ AMask.AMaskValues.TrailerCount, typeof (int) },
-					{ AMask.AMaskValues.ParodyCount, typeof (int) },
-
-					#endregion
-				});
-
-		public static readonly ReadOnlyDictionary<AMask.AMaskValues, string> AMaskNames =
-			new ReadOnlyDictionary<AMask.AMaskValues, string>(
-				new Dictionary<AMask.AMaskValues, string>
-				{
-					#region AMaskNames
-					{ AMask.AMaskValues.AID, "AID" },
-					{ AMask.AMaskValues.DateFlags, "Date Flags" },
-					{ AMask.AMaskValues.Year, "Year" },
-					{ AMask.AMaskValues.Type, "Type" },
-					{ AMask.AMaskValues.RelatedAIDList, "Related AID List" },
-					{ AMask.AMaskValues.RelatedAIDType, "Related AID Types" },
-					{ AMask.AMaskValues.CategoryList, "Category List" },
-					{ AMask.AMaskValues.CategoryWeightList, "Category List Weights" },
-					{ AMask.AMaskValues.RomanjiName, "Romanji Name" },
-					{ AMask.AMaskValues.KanjiName, "Kanji Name" },
-					{ AMask.AMaskValues.EnglishName, "English Name" },
-					{ AMask.AMaskValues.OtherName, "Other Names" },
-					{ AMask.AMaskValues.ShortNameList, "Short Name List" },
-					{ AMask.AMaskValues.SynonymList, "Synonym List" },
-					{ AMask.AMaskValues.Episodes, "Episodes" },
-					{ AMask.AMaskValues.HighestEpisodeNumber, "Highest Episode Number" },
-					{ AMask.AMaskValues.SpecialEpisodeCount, "Special Episodes" },
-					{ AMask.AMaskValues.AirDate, "Air Date" },
-					{ AMask.AMaskValues.EndDate, "End Date" },
-					{ AMask.AMaskValues.Url, "URL" },
-					{ AMask.AMaskValues.PicName, "Pic Name" },
-					{ AMask.AMaskValues.CategoryIdList, "Category ID List" },
-					{ AMask.AMaskValues.Rating, "Rating" },
-					{ AMask.AMaskValues.VoteCount, "Vote Count" },
-					{ AMask.AMaskValues.TempRating, "Temp. Rating" },
-					{ AMask.AMaskValues.TempVoteCount, "Temp. Vote Count" },
-					{ AMask.AMaskValues.AverageReviewRating, "Average Review Rating" },
-					{ AMask.AMaskValues.ReviewCount, "Review Count" },
-					{ AMask.AMaskValues.AwardList, "Award List" },
-					{ AMask.AMaskValues.IsR18Restricted, "18+ Restricted" },
-					{ AMask.AMaskValues.AnimePlanetId, "Anime Plant ID" },
-					{ AMask.AMaskValues.AnnId, "ANN ID" },
-					{ AMask.AMaskValues.AllCinemaId, "AllCinema ID" },
-					{ AMask.AMaskValues.AnimeNfoId, "AnimeNFO ID" },
-					{ AMask.AMaskValues.DateRecordUpdated, "Date Record Updated" },
-					{ AMask.AMaskValues.CharacterIdList, "Character ID List" },
-					{ AMask.AMaskValues.CreatorIdList, "Creator ID List" },
-					{ AMask.AMaskValues.MainCreatorIdList, "Main Creator ID List" },
-					{ AMask.AMaskValues.MainCreatorNameList, "Main Creator Name List" },
-					{ AMask.AMaskValues.SpecialsCount, "Specials count" },
-					{ AMask.AMaskValues.CreditsCount, "Credits count" },
-					{ AMask.AMaskValues.OtherCount, "Other Count" },
-					{ AMask.AMaskValues.TrailerCount, "Trailer Count" },
-					{ AMask.AMaskValues.ParodyCount, "Parody Count" },
-
-					#endregion
-				});
-
-		protected readonly Dictionary<AMask.AMaskValues, object> AMaskFields;
+					{ AMask.AMaskValues.AID, new FieldData<int?>("AID") },
+					{ AMask.AMaskValues.DateFlags, new FieldData<DateFlag>("Date Flags") },
+					{ AMask.AMaskValues.Year, new FieldData<string>("Year") },
+					{ AMask.AMaskValues.Type, new FieldData<string>("Type") },
+					{ AMask.AMaskValues.RelatedAIDList, new FieldData<IList<int>>("Related AID List") },
+					{ AMask.AMaskValues.RelatedAIDTypeList, new FieldData<IList<AIDRelationType>>("Related AID Type List") },
+					{ AMask.AMaskValues.CategoryList, new FieldData<IList<string>>("Category List") },
+					{ AMask.AMaskValues.CategoryWeightList, new FieldData<List<string>>("Category Weight List") },
+					{ AMask.AMaskValues.RomanjiName, new FieldData<string>("Romanji Name") },
+					{ AMask.AMaskValues.KanjiName, new FieldData<string>("Kanji Name") },
+					{ AMask.AMaskValues.EnglishName, new FieldData<string>("English Name") },
+					{ AMask.AMaskValues.OtherName, new FieldData<IList<string>>("Other Names") },
+					{ AMask.AMaskValues.ShortNameList, new FieldData<IList<string>>("Short Name List") },
+					{ AMask.AMaskValues.SynonymList, new FieldData<IList<string>>("Synonym List") },
+					{ AMask.AMaskValues.Episodes, new FieldData<int?>("Episodes") },
+					{ AMask.AMaskValues.HighestEpisodeNumber, new FieldData<int?>("Highest Episode Number") },
+					{ AMask.AMaskValues.SpecialEpisodeCount, new FieldData<int?>("Special Episodes") },
+					{ AMask.AMaskValues.AirDate, new FieldData<int?>("Air Date") },
+					{ AMask.AMaskValues.EndDate, new FieldData<int?>("End Date") },
+					{ AMask.AMaskValues.Url, new FieldData<string>("URL") },
+					{ AMask.AMaskValues.PicName, new FieldData<string>("Pic Name") },
+					{ AMask.AMaskValues.CategoryIdList, new FieldData<IList<string>>("Category ID List") },
+					{ AMask.AMaskValues.Rating, new FieldData<int?>("Rating") },
+					{ AMask.AMaskValues.VoteCount, new FieldData<int?>("Vote Count") },
+					{ AMask.AMaskValues.TempRating, new FieldData<int?>("Temp rating") },
+					{ AMask.AMaskValues.TempVoteCount, new FieldData<int?>("Temp vote count") },
+					{ AMask.AMaskValues.AverageReviewRating, new FieldData<int?>("Average Review Rating") },
+					{ AMask.AMaskValues.ReviewCount, new FieldData<int?>("Review Count") },
+					{ AMask.AMaskValues.AwardList, new FieldData<IList<string>>("Award List") },
+					{ AMask.AMaskValues.IsR18Restricted, new FieldData<bool?>("18+ Restricted") },
+					{ AMask.AMaskValues.AnimePlanetId, new FieldData<int?>("Anime Planet ID") },
+					{ AMask.AMaskValues.AnnId, new FieldData<int?>("ANN ID") },
+					{ AMask.AMaskValues.AllCinemaId, new FieldData<int?>("AllCinema ID") },
+					{ AMask.AMaskValues.AnimeNfoId, new FieldData<string>("AnimeNFO ID") },
+					{ AMask.AMaskValues.DateRecordUpdated, new FieldData<int?>("Date Record Updated") },
+					{ AMask.AMaskValues.CharacterIdList, new FieldData<IList<int>>("Character ID List") },
+					{ AMask.AMaskValues.CreatorIdList, new FieldData<IList<int>>("Creator ID List") },
+					{ AMask.AMaskValues.MainCreatorIdList, new FieldData<IList<int>>("Main Creator ID List") },
+					{ AMask.AMaskValues.MainCreatorNameList, new FieldData<IList<string>>("Main Creator Name List") },
+					{ AMask.AMaskValues.SpecialsCount, new FieldData<int?>("Specials Count") },
+					{ AMask.AMaskValues.CreditsCount, new FieldData<int?>("Credits Count") },
+					{ AMask.AMaskValues.OtherCount, new FieldData<int?>("Other Count") },
+					{ AMask.AMaskValues.TrailerCount, new FieldData<int?>("Trailer Count") },
+					{ AMask.AMaskValues.ParodyCount, new FieldData<int?>("Parody Count") },
+				};
 
 		#region AMask Public Fields
 
@@ -370,18 +343,18 @@ namespace libAniDB.NET
 			set { SetAMaskValue(AMask.AMaskValues.Type, value); }
 		}
 
-		public IList<string> RelatedAIDList
+		public IList<int> RelatedAIDList
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDList); }
+			get { return (List<int>)GetAMaskValue(AMask.AMaskValues.RelatedAIDList); }
 
 			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDList, value); }
 		}
 
-		public IList<string> RelatedAIDType
+		public IList<AIDRelationType> RelatedAIDTypeList
 		{
-			get { return (List<string>)GetAMaskValue(AMask.AMaskValues.RelatedAIDType); }
+			get { return (List<AIDRelationType>)GetAMaskValue(AMask.AMaskValues.RelatedAIDTypeList); }
 
-			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDType, value); }
+			set { SetAMaskValue(AMask.AMaskValues.RelatedAIDTypeList, value); }
 		}
 
 		public IList<string> CategoryList
@@ -554,34 +527,23 @@ namespace libAniDB.NET
 
 		#endregion
 
-		protected object GetAMaskValue(AMask.AMaskValues a)
+		private object GetAMaskValue(AMask.AMaskValues a)
 		{
-			return AMaskFields.ContainsKey(a) ? AMaskFields[a] : null;
+			return AMaskDefs[a].GetValue();
 		}
 
-		protected void SetAMaskValue(AMask.AMaskValues a, object value)
+		private void SetAMaskValue(AMask.AMaskValues a, object value)
 		{
-			if (value == null)
-			{
-				if (AMaskFields.ContainsKey(a))
-					AMaskFields.Remove(a);
-
-				return;
-			}
-
-			if (AMaskFields.ContainsKey(a))
-				AMaskFields[a] = value;
-			else
-				AMaskFields.Add(a, value);
+			AMaskDefs[a].SetValue(value);
 		}
 
-		public Anime()
-		{
-			AMaskFields = new Dictionary<AMask.AMaskValues, object>();
-		}
+		public Anime() {}
 
 		public Anime(AniDBResponse response, AMask aMask) : this()
 		{
+			if (response.Code != AniDBResponse.ReturnCode.ANIME && response.Code != AniDBResponse.ReturnCode.ANIME_BEST_MATCH)
+				throw new ArgumentException("Response is not an ANIME response");
+
 			List<string> dataFields = new List<string>();
 			foreach (string[] s in response.DataFields)
 				dataFields.AddRange(s);
@@ -598,31 +560,81 @@ namespace libAniDB.NET
 
 				if (!aMask.Mask.HasFlag(flag)) continue;
 
-				if (AMaskTypes[flag] == typeof (string))
+				if (AMaskDefs[flag].DataType == typeof (string))
 					field = dataFields[currentIndex];
-				else if (AMaskTypes[flag] == typeof (int))
+				else if (AMaskDefs[flag].DataType == typeof(int?))
 					field = int.Parse(dataFields[currentIndex]);
-				else if (AMaskTypes[flag] == typeof (bool))
+				else if (AMaskDefs[flag].DataType == typeof(bool?))
 					field = bool.Parse(dataFields[currentIndex]);
-				else if (AMaskTypes[flag] == typeof (IList<string>))
+				else if (AMaskDefs[flag].DataType == typeof(IList<string>))
 					//TODO: Make sure these are the only possibilities (and are the right choices)
 
 					field = new List<string>(dataFields[currentIndex].Split(flag == AMask.AMaskValues.CategoryList ? ',' : '\''));
-				else if (AMaskTypes[flag] == typeof (IList<AIDType>))
+				else if (AMaskDefs[flag].DataType == typeof(IList<AIDRelationType>))
 				{
-					field = new List<AIDType>();
+					field = new List<AIDRelationType>();
 
 					foreach (string s in dataFields[currentIndex].Split('\''))
-						((List<AIDType>)field).Add((AIDType)int.Parse(s));
+						((List<AIDRelationType>)field).Add((AIDRelationType)int.Parse(s));
 				}
-				else if (AMaskTypes[flag] == typeof(DateFlag))
+				else if (AMaskDefs[flag].DataType == typeof(DateFlag))
 					field = (DateFlag) int.Parse(dataFields[currentIndex]);
 
 				currentIndex++;
 
-				if (field != null)
-					AMaskFields.Add(flag, field);
+				AMaskDefs[flag].SetValue(field);
+
 			}
+		}
+
+		public override string ToString()
+		{
+			string result = "";
+
+			foreach(var a in AMaskDefs.Keys)
+			{
+				result += AMaskDefs[a].Name + ": ";
+
+				if (!AMaskDefs.ContainsKey(a))
+				{
+					result += "\n";
+					continue;
+				}
+
+				if (AMaskDefs[a].DataType == typeof(IList<string>))
+				{
+					result += "\n";
+
+					if (AMaskDefs[a].GetValue() == null)
+						continue;
+
+					foreach (string s in (List<string>)AMaskDefs[a].GetValue())
+						result += " " + s + "\n";
+				}
+				else if (AMaskDefs[a].DataType == typeof(IList<int>))
+				{
+					result += "\n";
+
+					if (AMaskDefs[a].GetValue() == null)
+						continue;
+
+					foreach (int i in (List<int>)AMaskDefs[a].GetValue())
+						result += " " + i + "\n";
+				}
+				else if (AMaskDefs[a].DataType == typeof(IList<AIDRelationType>))
+				{
+					result += "\n";
+
+					if (AMaskDefs[a].GetValue() == null)
+						continue;
+
+					foreach (int i in (List<AIDRelationType>)AMaskDefs[a].GetValue())
+						result += " " + i + "\n";
+				}
+				else result += (AMaskDefs[a].GetValue()) + "\n";
+			}
+
+			return result;
 		}
 	}
 }

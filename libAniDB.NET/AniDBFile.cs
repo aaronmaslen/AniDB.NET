@@ -30,7 +30,68 @@ using System.Linq;
 
 namespace libAniDB.NET
 {
-	public partial class AniDBFile : IAniDBFile
+	public interface IAniDBFile
+	{
+		int? FID { get; set; }
+		int? AID { get; set; }
+		int? EID { get; set; }
+		int? GID { get; set; }
+		int? MyListID { get; set; }
+		IDictionary<int, byte> OtherEpisodes { get; set; }
+		bool? Deprecated { get; set; }
+		AniDBFile.StateMask? State { get; set; }
+		long? Size { get; set; }
+		string ED2K { get; set; }
+		string MD5 { get; set; }
+		string SHA1 { get; set; }
+		string CRC32 { get; set; }
+		string VideoColorDepth { get; set; }
+		string Quality { get; set; }
+		string Source { get; set; }
+		IList<string> AudioCodecs { get; set; }
+		IList<int> AudioBitrates { get; set; }
+		string VideoCodec { get; set; }
+		int? VideoBitrate { get; set; }
+		string VideoResolution { get; set; }
+		string FileExtension { get; set; }
+		IList<string> DubLanguage { get; set; }
+		IList<string> SubLanguage { get; set; }
+		int? Length { get; set; }
+		string Description { get; set; }
+		int? AirDate { get; set; }
+		string AniDBFileName { get; set; }
+		int? MyListState { get; set; }
+		int? MyListFileState { get; set; }
+		int? MyListViewed { get; set; }
+		int? MyListViewDate { get; set; }
+		string MyListStorage { get; set; }
+		string MyListSource { get; set; }
+		string MyListOther { get; set; }
+		int? Episodes { get; set; }
+		int? HighestEpisodeNumber { get; set; }
+		string Year { get; set; }
+		string Type { get; set; }
+		IList<int> RelatedAIDList { get; set; }
+		IList<Anime.AIDRelationType> RelatedAIDTypeList { get; set; }
+		IList<string> CategoryList { get; set; }
+		string RomanjiName { get; set; }
+		string KanjiName { get; set; }
+		string EnglishName { get; set; }
+		IList<string> OtherName { get; set; }
+		IList<string> ShortNameList { get; set; }
+		IList<string> SynonymList { get; set; }
+		string EpisodeNumber { get; set; }
+		string EpisodeName { get; set; }
+		string EpisodeRomanjiName { get; set; }
+		string EpisodeKanjiName { get; set; }
+		int? EpisodeRating { get; set; }
+		int? EpisodeVoteCount { get; set; }
+		string GroupName { get; set; }
+		string GroupShortName { get; set; }
+		int? DateAIDRecordUpdated { get; set; }
+	}
+
+	public sealed partial class AniDBFile : IAniDBFile
 	{
 		[Flags]
 		public enum StateMask : short
@@ -48,100 +109,107 @@ namespace libAniDB.NET
 
 		public int? FID { get; set; }
 
-		public void DecodeData(AniDBFile fileResponse)
-		{
-			if (FID == null || FID == -1)
-				FID = fileResponse.FID;
+		//protected void DecodeData(AniDBFile fileResponse)
+		//{
+		//	if (FID == null || FID == -1)
+		//		FID = fileResponse.FID;
 
-			else if (fileResponse.FID != FID)
-				throw new ArgumentException("Data to add is for a different file");
+		//	else if (fileResponse.FID != FID)
+		//		throw new ArgumentException("Data to add is for a different file");
 
-			foreach (FMask.FMaskValues f in fileResponse.FMaskFields.Keys)
-				SetFMaskValue(f, fileResponse.FMaskFields[f]);
+		//	foreach (AniDBFile.FMask.FMaskValues f in fileResponse.FMaskFields.Keys)
+		//		SetFMaskValue(f, fileResponse.FMaskFields[f]);
 
-			foreach (AMask.AMaskValues a in fileResponse.AMaskFields.Keys)
-				SetAMaskValue(a, fileResponse.AMaskFields[a]);
-		}
+		//	foreach (AniDBFile.AMask.AMaskValues a in fileResponse.AMaskFields.Keys)
+		//		SetAMaskValue(a, fileResponse.AMaskFields[a]);
+		//}
 
 		public override string ToString()
 		{
-			string data = "FID: " + (FID != null ? FID.Value.ToString(CultureInfo.InvariantCulture) : "") + "\n";
+			string result = "FID: " + (FID != null ? FID.Value.ToString(CultureInfo.InvariantCulture) : "") + "\n";
 
-			foreach (var f in FMaskNames.Keys)
+			foreach (var f in FMaskFields.Keys)
 			{
-				data += FMaskNames[f] + ": ";
+				result += FMaskFields[f].Name + ": ";
 
 				if (!FMaskFields.ContainsKey(f))
 				{
-					data += "\n";
+					result += "\n";
 					continue;
 				}
 
-				if (FMaskTypes[f] == typeof (List<string>))
+				if (FMaskFields[f].DataType == typeof (IList<string>))
 				{
-					data += "\n";
+					result += "\n";
 
-					if (FMaskFields[f] == null)
+					if (FMaskFields[f].GetValue() == null)
 						continue;
 
-					foreach (string s in (List<string>)FMaskFields[f])
-						data += " " + s + "\n";
+					foreach (string s in ((FieldData<IList<string>>)FMaskFields[f]).Value)
+						result += " " + s + "\n";
 				}
-				else if (FMaskTypes[f] == typeof (List<int>))
+				else if (FMaskFields[f].DataType == typeof (IList<int>))
 				{
-					data += "\n";
+					result += "\n";
 
-					if (FMaskFields[f] == null)
+					if (FMaskFields[f].GetValue() == null)
 						continue;
 
-					foreach (int i in (List<int>)FMaskFields[f])
-						data += " " + i + "\n";
+					foreach (int i in ((FieldData<IList<int>>)FMaskFields[f]).Value)
+						result += " " + i + "\n";
 				}
-				else if (FMaskTypes[f] == typeof (Dictionary<int, byte>))
+				else if (FMaskFields[f].DataType == typeof (IDictionary<int, byte>))
 				{
-					data += "\n";
+					result += "\n";
 
-					if (FMaskFields[f] == null)
+					if (FMaskFields[f].GetValue() == null)
 						continue;
 
-					foreach (int i in ((Dictionary<int, byte>)FMaskFields[f]).Keys)
-						data += " " + i + " " + ((Dictionary<int, byte>)FMaskFields[f])[i] + "\n";
+					foreach (int i in ((FieldData<IDictionary<int, byte>>)FMaskFields[f]).Value.Keys)
+						result += " " + i + " " + ((FieldData<IDictionary<int, byte>>)FMaskFields[f]).Value[i] + "\n";
 				}
-				else data += (FMaskFields[f].ToString() == "-1" ? "" : FMaskFields[f]) + "\n";
+				else result += FMaskFields[f].GetValue() + "\n";
 			}
 
-			foreach (AMask.AMaskValues a in AMaskNames.Keys)
+			foreach (AMask.AMaskValues a in AMaskFields.Keys)
 			{
-				data += AMaskNames[a] + ": ";
+				result += AMaskFields[a].Name + ": ";
 
 				if (!AMaskFields.ContainsKey(a))
 				{
-					data += "\n";
+					result += "\n";
 					continue;
 				}
 
-				if (AMaskTypes[a] == typeof (List<string>))
+				if (AMaskFields[a].DataType == typeof (IList<string>))
 				{
-					data += "\n";
+					result += "\n";
 
-					if (AMaskFields[a] == null)
+					if (AMaskFields[a].GetValue() == null)
 						continue;
 
-					foreach (string s in (List<string>)AMaskFields[a])
-						data += " " + s + "\n";
+					foreach (string s in ((FieldData<IList<string>>)AMaskFields[a]).Value)
+						result += " " + s + "\n";
 				}
-				else data += (AMaskFields[a].ToString() == "-1" ? "" : AMaskFields[a]) + "\n";
+				else if (AMaskFields[a].DataType == typeof(IList<int>))
+				{
+					result += "\n";
+
+					if (AMaskFields[a].GetValue() == null)
+						continue;
+
+					foreach (int i in ((FieldData<IList<int>>)AMaskFields[a]).Value)
+						result += " " + i + "\n";
+				}
+				else result += AMaskFields[a].GetValue() + "\n";
 			}
 
-			return data;
+			return result;
 		}
 
 		public AniDBFile()
 		{
 			FID = null;
-
-			FMaskFields = new Dictionary<FMask.FMaskValues, object>();
-			AMaskFields = new Dictionary<AMask.AMaskValues, object>();
 		}
 
 		public AniDBFile(AniDBResponse fileResponse, FMask fMask, AMask aMask) : this()
@@ -169,19 +237,19 @@ namespace libAniDB.NET
 				object field = null;
 
 				if (dataFields[currentIndex] != "")
-					if (FMaskTypes[flag] == typeof(string))
+					if (FMaskFields[flag].DataType == typeof(string))
 						field = dataFields[currentIndex];
-					else if (FMaskTypes[flag] == typeof(int))
+					else if (FMaskFields[flag].DataType == typeof(int))
 						field = int.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof(short))
+					else if (FMaskFields[flag].DataType == typeof(short))
 						field = short.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof(bool))
+					else if (FMaskFields[flag].DataType == typeof(bool))
 						field = short.Parse(dataFields[currentIndex]) == 1;
-					else if (FMaskTypes[flag] == typeof(long))
+					else if (FMaskFields[flag].DataType == typeof(long))
 						field = long.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof(StateMask))
+					else if (FMaskFields[flag].DataType == typeof(StateMask))
 						field = short.Parse(dataFields[currentIndex]);
-					else if (FMaskTypes[flag] == typeof(IDictionary<int, byte>))
+					else if (FMaskFields[flag].DataType == typeof(IDictionary<int, byte>))
 					{
 						string[] splitString = dataFields[currentIndex].Split('\'');
 						Dictionary<int, byte> otherEpisodes = new Dictionary<int, byte>();
@@ -192,17 +260,12 @@ namespace libAniDB.NET
 
 						field = otherEpisodes;
 					}
-					else if (FMaskTypes[flag] == typeof(IList<string>))
+					else if (FMaskFields[flag].DataType == typeof(IList<string>))
 						field = new List<string>(dataFields[currentIndex].Split('\''));
-					else if (FMaskTypes[flag] == typeof(IList<int>))
+					else if (FMaskFields[flag].DataType == typeof(IList<int>))
 						field = dataFields[currentIndex].Split('\'').Select(int.Parse).ToList();
 
-				//Add value to Dictionary), probably unecessary checks
-				if (field != null)
-					if (FMaskFields.ContainsKey(flag))
-						FMaskFields[flag] = field;
-					else
-						FMaskFields.Add(flag, field);
+				FMaskFields[flag].SetValue(field);
 
 				currentIndex++;
 			}
@@ -217,18 +280,23 @@ namespace libAniDB.NET
 
 				object field = null;
 
-				if (AMaskTypes[flag] == typeof (int))
+				if (AMaskFields[flag].DataType == typeof (int))
 					field = int.Parse(dataFields[currentIndex]);
-				else if (AMaskTypes[flag] == typeof (string))
+				else if (AMaskFields[flag].DataType == typeof(string))
 					field = dataFields[currentIndex];
-				else if (AMaskTypes[flag] == typeof (List<string>))
+				else if (AMaskFields[flag].DataType == typeof(IList<string>))
 					field = new List<string>(dataFields[currentIndex].Split('\''));
+				else if (AMaskFields[flag].DataType == typeof(IList<int>))
+					field = dataFields[currentIndex].Split('\'').Select(int.Parse).ToList();
+				else if (AMaskFields[flag].DataType == typeof(IList<Anime.AIDRelationType>))
+				{
+					field = new List<Anime.AIDRelationType>();
 
-				if (field != null)
-					if (AMaskFields.ContainsKey(flag))
-						AMaskFields[flag] = field;
-					else
-						AMaskFields.Add(flag, field);
+					foreach (string s in dataFields[currentIndex].Split('\''))
+						((List<Anime.AIDRelationType>)field).Add((Anime.AIDRelationType)int.Parse(s));
+				}
+
+				AMaskFields[flag].SetValue(field);
 
 				currentIndex++;
 			}
