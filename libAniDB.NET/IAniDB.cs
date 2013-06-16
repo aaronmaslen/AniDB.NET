@@ -25,9 +25,6 @@
 
 namespace libAniDB.NET
 {
-	/// <summary>
-	/// Interface to AniDB class. Use AniDBFactory to get an instance.
-	/// </summary>
 	public interface IAniDB
 	{
 		///// <summary>
@@ -70,6 +67,13 @@ namespace libAniDB.NET
 		/// <summary>
 		/// Logs out, must be logged in
 		/// </summary>
+		/// <remarks>
+		/// Possible Replies:
+		/// <list type="bullet">
+		///  <item><description>203 LOGGED OUT</description></item>
+		///  <item><description>403 NOT LOGGED IN</description></item>
+		/// </list>
+		/// </remarks>
 		AniDBRequest Logout();
 
 		/// <summary>
@@ -83,22 +87,68 @@ namespace libAniDB.NET
 		/// or to keep a "connection" alive.
 		/// </summary>
 		/// <param name="nat">If true(default), returns the outgoing port number.</param>
+		/// <remarks>
+		/// This command does not require a session.<br/>
+		/// Possible Replies:
+		/// <list type="bullet">
+		///  <item><description>300 PONG<br/>
+		///   {int4 port}</description></item>
+		/// </list>
+		/// </remarks>
 		AniDBRequest Ping(bool nat = false);
 
 		/// <summary>
-		/// Changes the encoding method.
+		/// Sets preferred encoding per session. The preferred way to do this is to use the enc argument for AUTH.
+		/// This command is mostly for testing.
 		/// </summary>
-		/// <param name="name"></param>
+		/// <param name="name">Encoding name</param>
+		/// <remarks>
+		/// This command does not require a session.<br/>
+		/// Possible Replies:
+		/// <list type="bullet">
+		///  <item><description>219 ENCODING CHANGED</description></item>
+		///  <item><description>519 ENCODING NOT SUPPORTED</description></item>
+		/// </list>
+		/// </remarks>
 		AniDBRequest ChangeEncoding(string name);
 
+		/// <summary>
+		/// Retrive server uptime. The preferred way to check that the session is OK.
+		/// </summary>
+		/// <remarks>
+		/// Possible Replies:
+		/// <list type="bullet">
+		///  <item><description>208 UPTIME<br/>
+		///   {int4 udpserver uptime in milliseconds}</description></item>
+		/// </list>
+		/// </remarks>
 		AniDBRequest Uptime();
+
+		/// <summary>
+		/// Retrieve Server Version
+		/// </summary>
+		/// <remarks>
+		/// This command does not require a session.<br/>
+		/// Possible Replies:
+		/// <list type="bullet">
+		///  <item><description>998 VERSION<br/>
+		///   {str server version}</description></item>
+		/// </list>
+		/// </remarks>
 		AniDBRequest Version();
+
+
 		AniDBRequest Anime(int aID, Anime.AMask aMask = null);
 		AniDBRequest Anime(string aName, Anime.AMask aMask = null);
+
 		AniDBRequest AnimeDesc(int aID, int partNo);
+
 		AniDBRequest Calendar();
+
 		AniDBRequest Character(int charID);
+
 		AniDBRequest Creator(int creatorID);
+
 		AniDBRequest Episode(int eID);
 		AniDBRequest Episode(string aName, int epNo);
 		AniDBRequest Episode(int aID, int epNo);
@@ -112,6 +162,7 @@ namespace libAniDB.NET
 
 		AniDBRequest Group(int gID);
 		AniDBRequest Group(string gName);
+
 		AniDBRequest GroupStatus(int aID, int state = 0);
 	}
 }
